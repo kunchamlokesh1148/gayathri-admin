@@ -1,0 +1,158 @@
+@import "tailwindcss";
+
+@theme {
+  --color-indigo-50: #fdfbf7;
+  --color-indigo-100: #f6eedc;
+  --color-indigo-200: #eddcb9;
+  --color-indigo-300: #dec288;
+  --color-indigo-400: #cda353;
+  --color-indigo-500: #b9862d;
+  --color-indigo-600: #a37021;
+  --color-indigo-700: #865719;
+  --color-indigo-800: #6b4214;
+  --color-indigo-900: #54310f;
+  --color-indigo-950: #2d1705;
+
+  --color-purple-50: #faf8f2;
+  --color-purple-100: #f0e9d6;
+  --color-purple-200: #e2d3b0;
+  --color-purple-300: #ceb680;
+  --color-purple-400: #b79754;
+  --color-purple-500: #9e7930;
+  --color-purple-600: #836025;
+  --color-purple-700: #66491d;
+  --color-purple-800: #4b3416;
+  --color-purple-900: #33210e;
+  --color-purple-950: #1c1105;
+
+  /* Reversed slate color scale to map dark-mode layout classes to light Champagne theme */
+  --color-slate-950: #faf8f5; /* Main viewport light cream */
+  --color-slate-900: #f5f0e6; /* Sidebar background light cream-gold */
+  --color-slate-850: #ebe2cf; /* Card backings, soft borders */
+  --color-slate-800: #e0d5bd; /* Sub-borders */
+  --color-slate-700: #c5bca9; /* Muted lines */
+  --color-slate-600: #8e8574; /* Placeholder text */
+  --color-slate-500: #756c5c; /* Sub-headings */
+  --color-slate-400: #544d41; /* Primary body text (medium charcoal) */
+  --color-slate-300: #3b362d; /* Headings (dark charcoal) */
+  --color-slate-200: #2c2822; /* Heavy text */
+  --color-slate-100: #1c1a16; /* Pure charcoal text */
+}
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-400 font-sans antialiased min-h-screen;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(185, 134, 45, 0.08) 0px, transparent 45%),
+      radial-gradient(at 100% 0%, rgba(131, 96, 37, 0.05) 0px, transparent 40%),
+      radial-gradient(at 50% 100%, rgba(185, 134, 45, 0.03) 0px, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+/* Custom premium components */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(185, 134, 45, 0.18);
+  box-shadow: 0 10px 30px -10px rgba(131, 96, 37, 0.06);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(185, 134, 45, 0.12);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(185, 134, 45, 0.45);
+  box-shadow: 0 10px 25px -5px rgba(131, 96, 37, 0.08), 0 8px 10px -6px rgba(131, 96, 37, 0.08);
+  transform: translateY(-2px);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(185, 134, 45, 0.25);
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #1c1a16;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: #b9862d;
+  box-shadow: 0 0 0 1px #b9862d;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.glass-btn-primary {
+  @apply bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-md shadow-indigo-600/10 active:scale-98;
+}
+
+.glass-btn-secondary {
+  @apply bg-slate-900 hover:bg-slate-850 text-slate-100 font-medium px-4 py-2 rounded-lg border border-slate-800 transition-all duration-200 active:scale-98;
+}
+
+.glass-btn-danger {
+  @apply bg-red-600 hover:bg-red-500 text-white font-medium px-4 py-2 rounded-lg transition-all duration-200 shadow-md shadow-red-600/10 active:scale-98;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(245, 240, 230, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(185, 134, 45, 0.25);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(185, 134, 45, 0.45);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Badge classes */
+.badge-pending {
+  @apply bg-amber-600/10 text-amber-600 border border-amber-500/20 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-accepted {
+  @apply bg-blue-600/10 text-blue-600 border border-blue-500/20 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-packed {
+  @apply bg-purple-600/10 text-purple-600 border border-purple-500/20 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-delivery, .badge-outfordelivery, .badge-intransit {
+  @apply bg-indigo-600/10 text-indigo-600 border border-indigo-500/20 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.badge-delivered {
+  @apply bg-emerald-600/10 text-emerald-600 border border-emerald-500/20 px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
