@@ -96,41 +96,41 @@ export default function Reports() {
     <div className="space-y-8 animate-fade-in">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-100">Warehouse Reports & Analytics</h2>
-        <p className="text-sm text-slate-400">Examine margins, transaction volumes, and warehouse throughput metrics</p>
+        <h2 className="text-2xl font-bold text-[#1F2937]">Warehouse Reports & Analytics</h2>
+        <p className="text-sm text-[#4B5563]">Examine margins, transaction volumes, and warehouse throughput metrics</p>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <p className="text-[10px] font-semibold text-slate-500 uppercase">Gross Revenue (Delivered)</p>
-          <p className="text-2xl font-extrabold text-emerald-400 mt-1">₹{revenue.toFixed(2)}</p>
-          <p className="text-[10px] text-slate-500 mt-1 flex items-center gap-1">
-            <TrendingUp size={10} className="text-emerald-400" />
+        <div className="glass-panel p-5 rounded-2xl border border-[#E6D9B8]">
+          <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">Gross Revenue (Delivered)</p>
+          <p className="text-2xl font-black text-emerald-600 mt-1">₹{revenue.toFixed(2)}</p>
+          <p className="text-[10px] text-[#6B7280] mt-1 flex items-center gap-1">
+            <TrendingUp size={10} className="text-emerald-650" />
             <span>Completed sales</span>
           </p>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <p className="text-[10px] font-semibold text-slate-500 uppercase">In Transit Pipeline</p>
-          <p className="text-2xl font-extrabold text-indigo-400 mt-1">₹{transitRevenue.toFixed(2)}</p>
-          <p className="text-[10px] text-slate-500 mt-1">
+        <div className="glass-panel p-5 rounded-2xl border border-[#E6D9B8]">
+          <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">In Transit Pipeline</p>
+          <p className="text-2xl font-black text-blue-600 mt-1">₹{transitRevenue.toFixed(2)}</p>
+          <p className="text-[10px] text-[#6B7280] mt-1">
             <span>{inTransitOrders.length} dispatched shipments</span>
           </p>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <p className="text-[10px] font-semibold text-slate-500 uppercase">Pending Backlog Value</p>
-          <p className="text-2xl font-extrabold text-amber-400 mt-1">₹{pendingRevenue.toFixed(2)}</p>
-          <p className="text-[10px] text-slate-500 mt-1">
+        <div className="glass-panel p-5 rounded-2xl border border-[#E6D9B8]">
+          <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">Pending Backlog Value</p>
+          <p className="text-2xl font-black text-amber-650 mt-1">₹{pendingRevenue.toFixed(2)}</p>
+          <p className="text-[10px] text-[#6B7280] mt-1">
             <span>{pendingOrders.length} incoming orders</span>
           </p>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800">
-          <p className="text-[10px] font-semibold text-slate-500 uppercase">Gross Order Volume</p>
-          <p className="text-2xl font-extrabold text-slate-200 mt-1">{totalSalesVolume}</p>
-          <p className="text-[10px] text-slate-500 mt-1">
+        <div className="glass-panel p-5 rounded-2xl border border-[#E6D9B8]">
+          <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">Gross Order Volume</p>
+          <p className="text-2xl font-black text-[#1F2937] mt-1">{totalSalesVolume}</p>
+          <p className="text-[10px] text-[#6B7280] mt-1">
             <span>All status categories</span>
           </p>
         </div>
@@ -142,8 +142,8 @@ export default function Reports() {
         {/* Revenue Timeline */}
         <div className="glass-panel p-6 rounded-2xl lg:col-span-2 space-y-4">
           <div>
-            <h4 className="font-bold text-slate-100">Revenue Timeline</h4>
-            <p className="text-xs text-slate-400">Chronological list of billing amounts for completed orders</p>
+            <h4 className="font-bold text-[#1F2937]">Revenue Timeline</h4>
+            <p className="text-xs text-[#6B7280]">Chronological list of billing amounts for completed orders</p>
           </div>
           <div className="h-72 w-full">
             {timelineData.length > 0 ? (
@@ -158,16 +158,16 @@ export default function Reports() {
                   <XAxis dataKey="date" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} tickFormatter={val => `₹${val}`} />
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.95)', borderColor: '#334155', borderRadius: '8px' }}
-                    labelStyle={{ color: '#94a3b8', fontSize: '11px', fontWeight: 'bold' }}
-                    itemStyle={{ color: '#fff', fontSize: '13px' }}
+                    contentStyle={{ backgroundColor: 'rgba(250, 244, 231, 0.95)', borderColor: '#E6D9B8', borderRadius: '8px' }}
+                    labelStyle={{ color: '#5A3B00', fontSize: '11px', fontWeight: 'bold' }}
+                    itemStyle={{ color: '#1F2937', fontSize: '13px' }}
                     formatter={(val, name, props) => [`₹${val.toFixed(2)}`, `${props.payload.order}`]}
                   />
                   <Area type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} fillOpacity={1} fill="url(#colorRev)" />
                 </AreaChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+              <div className="h-full flex items-center justify-center text-[#6B7280] text-xs">
                 No billing history to compile trend charts.
               </div>
             )}
@@ -177,8 +177,8 @@ export default function Reports() {
         {/* Order Status Pie Chart */}
         <div className="glass-panel p-6 rounded-2xl space-y-4">
           <div>
-            <h4 className="font-bold text-slate-100">Fulfillment Pipeline Share</h4>
-            <p className="text-xs text-slate-400">Order share segmented by logistics status</p>
+            <h4 className="font-bold text-[#1F2937]">Fulfillment Pipeline Share</h4>
+            <p className="text-xs text-[#6B7280]">Order share segmented by logistics status</p>
           </div>
           <div className="h-64 flex justify-center items-center">
             {statusPieData.length > 0 ? (
@@ -198,13 +198,13 @@ export default function Reports() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.95)', borderColor: '#334155', borderRadius: '8px', color: '#fff' }}
+                    contentStyle={{ backgroundColor: 'rgba(250, 244, 231, 0.95)', borderColor: '#E6D9B8', borderRadius: '8px', color: '#1F2937' }}
                     itemStyle={{ fontSize: '12px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <div className="text-slate-500 flex flex-col items-center justify-center">
+              <div className="text-[#6B7280] flex flex-col items-center justify-center">
                 <p className="text-xs">No active pipeline orders.</p>
               </div>
             )}
@@ -212,7 +212,7 @@ export default function Reports() {
           {/* Status color indicators */}
           <div className="grid grid-cols-2 gap-2 text-[10px]">
             {statusPieData.map((entry, index) => (
-              <div key={entry.name} className="flex items-center gap-1.5 text-slate-350 truncate">
+              <div key={entry.name} className="flex items-center gap-1.5 text-[#4B5563] truncate">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }}></div>
                 <span className="truncate">{entry.name}: {entry.value}</span>
               </div>
@@ -225,8 +225,8 @@ export default function Reports() {
       {/* Row 2: Best Selling Products Bar Chart */}
       <div className="glass-panel p-6 rounded-2xl space-y-4">
         <div>
-          <h4 className="font-bold text-slate-100">Top Selling Products (Delivered Orders)</h4>
-          <p className="text-xs text-slate-400">Ranking of catalog items based on aggregate wholesale volume sold</p>
+          <h4 className="font-bold text-[#1F2937]">Top Selling Products (Delivered Orders)</h4>
+          <p className="text-xs text-[#6B7280]">Ranking of catalog items based on aggregate wholesale volume sold</p>
         </div>
         <div className="h-72 w-full">
           {bestSellersData.length > 0 ? (
@@ -235,11 +235,11 @@ export default function Reports() {
                 <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                 <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} axisLine={false} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.95)', borderColor: '#334155', borderRadius: '8px' }}
-                  itemStyle={{ color: '#fff', fontSize: '13px' }}
+                  contentStyle={{ backgroundColor: 'rgba(250, 244, 231, 0.95)', borderColor: '#E6D9B8', borderRadius: '8px' }}
+                  itemStyle={{ color: '#1F2937', fontSize: '13px' }}
                   formatter={(val) => [`${val} Units`, 'Quantity Sold']}
                 />
-                <Bar dataKey="sales" fill="#6366f1" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="sales" fill="#B8860B" radius={[4, 4, 0, 0]}>
                   {bestSellersData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
@@ -247,7 +247,7 @@ export default function Reports() {
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-slate-500 text-xs">
+            <div className="h-full flex items-center justify-center text-[#6B7280] text-xs">
               No sales records to analyze popular SKUs.
             </div>
           )}

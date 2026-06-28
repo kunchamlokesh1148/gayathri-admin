@@ -268,11 +268,11 @@ export default function DeliveryStaff() {
       {/* Tab 1: Staff Roster Table */}
       {activeTab === 'roster' && (
         <div className="space-y-4">
-          <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+          <div className="glass-panel rounded-2xl overflow-hidden border border-[#E6D9B8]">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
+              <table className="premium-table">
                 <thead>
-                  <tr className="bg-slate-900/40 border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <tr>
                     <th className="p-4 pl-6">NAME</th>
                     <th className="p-4">EMAIL</th>
                     <th className="p-4">MOBILE PHONE</th>
@@ -280,30 +280,30 @@ export default function DeliveryStaff() {
                     <th className="p-4 text-center">ACTIONS</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-850/60 text-slate-300">
+                <tbody>
                   {staff.map(driver => (
-                    <tr key={driver.id} className="hover:bg-slate-900/10 border-b border-slate-850/30 transition-colors">
+                    <tr key={driver.id}>
                       {/* Name with initials circle */}
                       <td className="p-4 pl-6">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-slate-900/40 flex items-center justify-center text-xs font-bold text-slate-300 border border-slate-800">
+                          <div className="w-8 h-8 rounded-full bg-[#FAF4E7] flex items-center justify-center text-xs font-bold text-[#B8860B] border border-[#E6D9B8]">
                             {(driver.name || 'DS').substring(0, 2).toUpperCase()}
                           </div>
                           <div>
-                            <span className="font-semibold text-slate-200 text-sm leading-tight">{driver.name}</span>
+                            <span className="font-semibold text-[#1F2937] text-sm leading-tight">{driver.name}</span>
                           </div>
                         </div>
                       </td>
 
                       {/* Email */}
-                      <td className="p-4 text-xs text-slate-400 font-medium">
+                      <td className="p-4 text-xs text-[#4B5563] font-medium">
                         {driver.email || 'No Email'}
                       </td>
 
                       {/* Phone */}
                       <td className="p-4">
-                        <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono">
-                          <Phone size={12} className="text-slate-500" />
+                        <div className="flex items-center gap-1.5 text-xs text-[#4B5563] font-mono">
+                          <Phone size={12} className="text-slate-450" />
                           <span>{driver.phone || 'No Phone'}</span>
                         </div>
                       </td>

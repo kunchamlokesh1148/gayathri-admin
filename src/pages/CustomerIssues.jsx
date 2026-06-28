@@ -311,11 +311,11 @@ export default function CustomerIssues() {
 
       {/* Search Header panel */}
       <div className="relative p-4 rounded-xl glass-panel max-w-md">
-        <Search size={18} className="absolute left-7 top-7 text-slate-500" />
+        <Search size={18} className="absolute left-7.5 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
           placeholder="Filter by customer, shop, issue type..."
-          className="w-full pl-10 pr-4 py-2.5 glass-input text-sm"
+          className="premium-input pl-10 pr-4"
           style={{ paddingLeft: '2.5rem' }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -323,11 +323,11 @@ export default function CustomerIssues() {
       </div>
 
       {/* Main Table Layout */}
-      <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800 shadow-xl">
+      <div className="glass-panel rounded-2xl overflow-hidden border border-[#E6D9B8] shadow-xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="premium-table">
             <thead>
-              <tr className="bg-slate-900/50 border-b border-slate-800 text-xs font-semibold text-slate-400">
+              <tr>
                 <th className="p-4">Customer & Store</th>
                 <th className="p-4">Issue Details</th>
                 <th className="p-4">Contacts</th>
@@ -336,44 +336,44 @@ export default function CustomerIssues() {
                 <th className="p-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-850 text-sm text-slate-300">
+            <tbody>
               {filteredIssues.map((issue) => (
-                <tr key={issue.id} className="hover:bg-slate-900/10 transition-colors">
+                <tr key={issue.id}>
                   {/* Customer and Store info */}
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-lg">
+                      <div className="p-2.5 bg-[#FAF4E7] border border-[#E6D9B8] text-[#B8860B] rounded-lg">
                         <Building2 size={16} />
                       </div>
                       <div>
-                        <p className="font-semibold text-slate-100">{issue.shopName}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">{issue.customerName}</p>
+                        <p className="font-bold text-[#1F2937] text-sm">{issue.shopName}</p>
+                        <p className="text-xs text-[#6B7280] mt-0.5">{issue.customerName}</p>
                       </div>
                     </div>
                   </td>
 
                   {/* Issue details summary */}
                   <td className="p-4 max-w-xs">
-                    <p className="font-semibold text-slate-200 truncate">{issue.issueType}</p>
-                    <p className="text-xs text-slate-500 mt-1 line-clamp-1">{issue.description}</p>
+                    <p className="font-bold text-[#1F2937] truncate">{issue.issueType}</p>
+                    <p className="text-xs text-[#6B7280] mt-1 line-clamp-1">{issue.description}</p>
                   </td>
 
                   {/* Quick Contacts */}
                   <td className="p-4 space-y-1 text-xs">
-                    <div className="flex items-center gap-1.5 text-slate-400 hover:text-slate-200">
-                      <Mail size={12} className="text-slate-500" />
+                    <div className="flex items-center gap-1.5 text-[#4B5563]">
+                      <Mail size={12} className="text-slate-450" />
                       <span>{issue.email}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-slate-400 hover:text-slate-200">
-                      <Phone size={12} className="text-slate-500" />
+                    <div className="flex items-center gap-1.5 text-[#4B5563]">
+                      <Phone size={12} className="text-slate-450" />
                       <span>{issue.mobileNumber}</span>
                     </div>
                   </td>
 
                   {/* Raised Date */}
-                  <td className="p-4 text-xs text-slate-400">
+                  <td className="p-4 text-xs text-[#4B5563]">
                     <div className="flex items-center gap-1.5">
-                      <Calendar size={12} className="text-slate-600" />
+                      <Calendar size={12} className="text-slate-450" />
                       <span>{formatDate(issue.raisedDate)}</span>
                     </div>
                   </td>

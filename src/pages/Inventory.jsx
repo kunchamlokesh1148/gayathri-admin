@@ -156,23 +156,23 @@ export default function Inventory() {
 
       {/* Stats Summary Panel */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800 flex items-center gap-4">
-          <div className="p-3 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+        <div className="glass-panel p-5 rounded-2xl flex items-center gap-4">
+          <div className="p-3.5 rounded-xl bg-[#FAF4E7] text-[#B8860B] border border-[#E6D9B8] shadow-sm">
             <Boxes size={22} />
           </div>
           <div>
-            <p className="text-[10px] font-semibold text-slate-500 uppercase">Stock SKU Count</p>
-            <p className="text-xl font-extrabold text-slate-200 mt-0.5">{products.length}</p>
+            <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">Stock SKU Count</p>
+            <p className="text-xl font-black text-[#1F2937] mt-0.5">{products.length}</p>
           </div>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800 flex items-center gap-4">
-          <div className="p-3 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+        <div className="glass-panel p-5 rounded-2xl flex items-center gap-4">
+          <div className="p-3.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 shadow-sm">
             <AlertTriangle size={22} />
           </div>
           <div>
-            <p className="text-[10px] font-semibold text-slate-500 uppercase">Low Stock Triggered</p>
-            <p className="text-xl font-extrabold text-slate-200 mt-0.5">
+            <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">Low Stock Triggered</p>
+            <p className="text-xl font-black text-[#1F2937] mt-0.5">
               {products.filter(p => {
                 const packs = getProductPacks(p);
                 const limit = p.minStock !== undefined && p.minStock !== null ? parseInt(p.minStock) : 10;
@@ -182,13 +182,13 @@ export default function Inventory() {
           </div>
         </div>
 
-        <div className="glass-panel p-5 rounded-2xl border border-slate-800 flex items-center gap-4">
-          <div className="p-3 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20">
+        <div className="glass-panel p-5 rounded-2xl flex items-center gap-4">
+          <div className="p-3.5 rounded-xl bg-red-50 text-red-650 border border-red-200 shadow-sm">
             <AlertTriangle size={22} />
           </div>
           <div>
-            <p className="text-[10px] font-semibold text-slate-500 uppercase">Out of Stock SKU</p>
-            <p className="text-xl font-extrabold text-slate-200 mt-0.5">
+            <p className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">Out of Stock SKU</p>
+            <p className="text-xl font-black text-[#1F2937] mt-0.5">
               {products.filter(p => getProductPacks(p) === 0).length}
             </p>
           </div>
@@ -197,11 +197,11 @@ export default function Inventory() {
 
       {/* Search Filter bar */}
       <div className="relative p-4 rounded-xl glass-panel max-w-md">
-        <Search size={18} className="absolute left-7 top-7 text-slate-500" />
+        <Search size={18} className="absolute left-7.5 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
           placeholder="Filter SKU or item name..."
-          className="w-full pl-10 pr-4 py-2.5 glass-input text-sm"
+          className="premium-input pl-10 pr-4"
           style={{ paddingLeft: '2.5rem' }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -209,11 +209,11 @@ export default function Inventory() {
       </div>
 
       {/* Inventory Table */}
-      <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+      <div className="glass-panel rounded-2xl overflow-hidden border border-[#E6D9B8]">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="premium-table">
             <thead>
-              <tr className="bg-slate-900/40 border-b border-slate-800 text-xs font-semibold text-slate-400">
+              <tr>
                 <th className="p-4">SKU / Product Name</th>
                 <th className="p-4">Category</th>
                 <th className="p-4 text-center">Alert Limit</th>
@@ -222,7 +222,7 @@ export default function Inventory() {
                 {!isStaff && <th className="p-4 text-right">Quick Stock Edit</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-850 text-sm text-slate-350">
+            <tbody>
               {filteredProducts.map(p => {
                 const packs = getProductPacks(p);
                 const isOutOfStock = packs === 0;
@@ -232,20 +232,20 @@ export default function Inventory() {
                 const isUpdating = updatingId === p.id;
                 
                 return (
-                  <tr key={p.id} className="hover:bg-slate-900/10">
+                  <tr key={p.id}>
                     {/* SKU & Name */}
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <img src={p.imageUrl} alt={p.name} className="w-9 h-9 object-cover rounded bg-slate-950 border border-slate-850" />
+                        <img src={p.imageUrl} alt={p.name} className="w-9 h-9 object-cover rounded bg-slate-950 border border-[#E6D9B8]" />
                         <div>
-                          <p className="font-bold text-slate-100">{p.name}</p>
-                          <p className="text-[10px] text-slate-500 font-mono mt-0.5">SKU: {p.sku}</p>
+                          <p className="font-bold text-[#1F2937] text-sm">{p.name}</p>
+                          <p className="text-[10px] text-[#6B7280] font-mono mt-0.5">SKU: {p.sku}</p>
                         </div>
                       </div>
                     </td>
 
                     {/* Category */}
-                    <td className="p-4 text-slate-400 text-xs">
+                    <td className="p-4 text-[#4B5563] text-xs">
                       {p.category}
                     </td>
 
@@ -309,7 +309,7 @@ export default function Inventory() {
                     </td>
 
                     {/* Stock level */}
-                    <td className="p-4 text-center font-bold text-xs text-slate-200">
+                    <td className="p-4 text-center font-bold text-xs text-[#1F2937]">
                       {packs} {String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('pack') || String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('box') ? `Pack(s) (${p.stockQty !== undefined ? p.stockQty : (p.stock || 0)} pcs)` : 'Piece(s)'}
                     </td>
 
@@ -320,12 +320,12 @@ export default function Inventory() {
                           Out of Stock
                         </span>
                       ) : isLowStock ? (
-                        <span className="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                        <span className="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">
                           Low Stock Alert
                         </span>
                       ) : (
-                        <span className="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                          In Stock Healthy
+                        <span className="bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                          Healthy Stock
                         </span>
                       )}
                     </td>
@@ -345,7 +345,7 @@ export default function Inventory() {
                               adjustStockStep(p.id, currentPieceStock, -stepValue);
                             }}
                             disabled={isUpdating || (p.stockQty !== undefined ? p.stockQty : (p.stock || 0)) < (String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('pack') || String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('box') ? (parseInt(p?.packQuantity) || 12) : 1)}
-                            className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-100 border border-slate-700 disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
+                            className="p-1.5 rounded bg-white hover:bg-[#FAF4E7] text-[#B8860B] border border-[#D6C7A6] disabled:opacity-30 transition-all active:scale-95 cursor-pointer"
                             title={String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('pack') || String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('box') ? `Reduce stock by 1 pack (${parseInt(p?.packQuantity) || 12} pcs)` : "Reduce stock by 1 piece"}
                           >
                             <Minus size={12} />
@@ -354,7 +354,8 @@ export default function Inventory() {
                           {/* Custom Input */}
                           <input
                             type="number"
-                            className="w-14 text-center py-1 glass-input text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            className="w-14 text-center py-1 premium-input text-xs [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            style={{ height: '32px' }}
                             value={localInputValue}
                             onChange={(e) => handleInputChange(p.id, e.target.value)}
                             onBlur={() => saveStock(p.id, localInputValue)}
@@ -378,7 +379,7 @@ export default function Inventory() {
                               adjustStockStep(p.id, currentPieceStock, stepValue);
                             }}
                             disabled={isUpdating}
-                            className="p-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-100 border border-slate-700 transition-all active:scale-95 cursor-pointer"
+                            className="p-1.5 rounded bg-white hover:bg-[#FAF4E7] text-[#B8860B] border border-[#D6C7A6] transition-all active:scale-95 cursor-pointer"
                             title={String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('pack') || String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase().includes('box') ? `Increase stock by 1 pack (${parseInt(p?.packQuantity) || 12} pcs)` : "Increase stock by 1 piece"}
                           >
                             <Plus size={12} />
@@ -389,7 +390,7 @@ export default function Inventory() {
                             <button
                               onClick={() => saveStock(p.id, localInputValue)}
                               disabled={isUpdating}
-                              className="p-1.5 rounded bg-indigo-600 hover:bg-indigo-500 text-white ml-1 border border-indigo-500 transition-all active:scale-95 animate-pulse cursor-pointer"
+                              className="p-1.5 rounded bg-[#B8860B] hover:bg-[#A67900] text-white ml-1 border border-[#B8860B] transition-all active:scale-95 animate-pulse cursor-pointer"
                               title="Save custom stock level"
                             >
                               <Check size={12} />

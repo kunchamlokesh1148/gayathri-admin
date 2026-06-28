@@ -127,14 +127,18 @@ export default function Layout({ children }) {
                 key={item.name}
                 to={item.path}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group
+                className={`flex items-center gap-4 px-3.5 py-2.5 rounded-lg transition-all duration-200 group
                   ${isActive 
-                    ? 'bg-indigo-650 text-slate-100 font-medium shadow-md shadow-indigo-600/10' 
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
+                    ? 'bg-[#B8860B] text-white font-semibold shadow-md shadow-[#B8860B]/10' 
+                    : 'text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]'
                   }`}
               >
-                <Icon size={20} className={`min-w-[20px] transition-transform group-hover:scale-105 ${isActive ? 'text-slate-100' : 'text-slate-400 group-hover:text-indigo-400'}`} />
-                {!collapsed && <span className="text-sm whitespace-nowrap">{item.name}</span>}
+                <Icon 
+                  size={22} 
+                  className={`min-w-[22px] transition-transform group-hover:scale-105 
+                    ${isActive ? 'text-white' : 'text-[#B8860B]'}`} 
+                />
+                {!collapsed && <span className="text-sm font-medium whitespace-nowrap">{item.name}</span>}
               </Link>
             );
           })}
@@ -145,7 +149,7 @@ export default function Layout({ children }) {
       {/* Main Content Area */}
       <div className="flex flex-col flex-1 h-full overflow-hidden">
         {/* Top Navbar */}
-        <header className="flex items-center justify-between h-16 px-6 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md">
+        <header className="flex items-center justify-between h-16 px-6 border-b border-[#E6D9B8] bg-white">
           <div className="flex items-center gap-4">
             <button 
               onClick={toggleMobile} 
@@ -153,7 +157,7 @@ export default function Layout({ children }) {
             >
               <Menu size={20} />
             </button>
-            <h1 className="text-lg font-semibold tracking-wide text-slate-100">
+            <h1 className="text-lg font-semibold tracking-wide text-[#1F2937]">
               {activeItem.name}
             </h1>
           </div>
@@ -161,24 +165,32 @@ export default function Layout({ children }) {
           <div className="flex items-center gap-4">
             {/* Database Banner Indicator */}
             {isMock && (
-              <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-full">
+              <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-amber-600 bg-amber-50 border border-amber-200 rounded-full">
                 <Globe size={12} className="animate-spin" style={{ animationDuration: '6s' }} />
                 Running in Local Mock Mode
               </span>
             )}
             
             {/* User Profile Card */}
-            <div className="flex items-center gap-3 pl-3 border-l border-slate-850">
+            <div className="flex items-center gap-3 pl-3 border-l border-[#E6D9B8]">
               <div className="hidden text-right md:block">
-                <p className="text-sm font-semibold text-slate-200">{adminProfile?.name || 'Admin'}</p>
-                <p className="text-xs text-slate-500">{adminProfile?.role || 'Portal Manager'}</p>
+                <p className="text-sm font-semibold text-[#1F2937] leading-none mb-1">{adminProfile?.name || 'Admin'}</p>
+                {adminProfile?.role === 'Super Admin' ? (
+                  <span className="inline-block text-[11px] font-semibold px-3.5 py-1.5 rounded-full bg-[#FDECC8] text-[#A66B00] whitespace-nowrap leading-none">
+                    🟨 Super Admin
+                  </span>
+                ) : (
+                  <span className="inline-block text-[11px] font-semibold px-3.5 py-1.5 rounded-full bg-slate-100 text-[#4B5563] border border-[#E6D9B8] whitespace-nowrap leading-none">
+                    {adminProfile?.role || 'Portal Manager'}
+                  </span>
+                )}
               </div>
-              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-indigo-650 font-bold text-sm text-white border border-indigo-500/30 uppercase">
+              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-[#B8860B] font-bold text-sm text-white border border-[#A67900]/30 uppercase">
                 {(adminProfile?.name || 'AD').split(' ').map(n => n[0]).join('').slice(0, 2)}
               </div>
               <button
                 onClick={handleLogoutClick}
-                className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800/60 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
+                className="p-2 text-slate-400 hover:text-red-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer flex items-center justify-center"
                 title="Log Out"
               >
                 <LogOut size={16} />

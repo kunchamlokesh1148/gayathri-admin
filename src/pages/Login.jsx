@@ -66,10 +66,10 @@ export default function Login() {
               className="w-full h-full object-cover"
             />
           </div>
-          <h2 className="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400 uppercase tracking-wider">
+          <h2 className="text-2xl font-black text-[#B8860B] uppercase tracking-wider">
             Gayathri Cutmit
           </h2>
-          <p className="text-xs text-slate-500 mt-1 uppercase font-bold tracking-widest">
+          <p className="text-xs text-[#4B5563] mt-1 uppercase font-bold tracking-widest">
             Wholesale - Admin Portal
           </p>
         </div>
@@ -80,42 +80,42 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleLoginSubmit} className="space-y-5">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+        <form onSubmit={handleLoginSubmit} className="space-y-6">
+          <div className="flex flex-col gap-2">
+            <label className="text-[11px] font-bold text-[#1F2937] uppercase tracking-wider">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
               <input
                 type="email"
                 required
-                className="glass-input text-xs pl-11 pr-4 py-3 w-full"
+                className="premium-input pl-11 pr-4 py-3 w-full"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="admin@srigayathri.com"
+                placeholder="Enter your email address"
               />
             </div>
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
+          <div className="flex flex-col gap-2">
+            <label className="text-[11px] font-bold text-[#1F2937] uppercase tracking-wider">
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                className="glass-input text-xs pl-11 pr-11 py-3 w-full"
+                className="premium-input pl-11 pr-11 py-3 w-full"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Enter your password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -125,7 +125,8 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="glass-btn-primary w-full py-3 text-xs font-extrabold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2 mt-4"
+            className="premium-btn-primary w-full text-xs font-bold tracking-widest uppercase cursor-pointer flex items-center justify-center gap-2 mt-6"
+            style={{ height: '44px' }}
           >
             {loading ? (
               <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>

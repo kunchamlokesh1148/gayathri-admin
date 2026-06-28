@@ -1141,9 +1141,9 @@ export default function Settings() {
 
                     {/* Products Grid list with toggle */}
                     <div className="border border-slate-850 rounded-xl overflow-hidden bg-slate-900/40 max-h-96 overflow-y-auto">
-                      <table className="w-full text-left border-collapse">
+                      <table className="premium-table">
                         <thead>
-                          <tr className="bg-slate-900 border-b border-slate-850 text-xs font-semibold text-slate-400">
+                          <tr>
                             <th className="px-4 py-3 text-center w-12">Featured</th>
                             <th className="px-4 py-3">Product Name</th>
                             <th className="px-4 py-3">Category</th>
@@ -1305,9 +1305,9 @@ export default function Settings() {
                       </div>
 
                       <div className="border border-slate-850 rounded-xl overflow-hidden bg-slate-900/40">
-                        <table className="w-full text-left border-collapse">
+                        <table className="premium-table">
                           <thead>
-                            <tr className="bg-slate-900 border-b border-slate-850 text-xs font-semibold text-slate-400">
+                            <tr>
                               <th className="px-4 py-3">Administrator Name</th>
                               <th className="px-4 py-3">Email / Username</th>
                               <th className="px-4 py-3">Access Role</th>

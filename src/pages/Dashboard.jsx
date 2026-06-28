@@ -216,8 +216,8 @@ export default function Dashboard() {
       {/* Date Filter */}
       <div className="glass-panel p-4 rounded-2xl space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1.5 text-slate-400 mr-1">
-            <Calendar size={14} />
+          <div className="flex items-center gap-1.5 text-[#1F2937] mr-1">
+            <Calendar size={14} className="text-[#B8860B]" />
             <span className="text-xs font-semibold">Filter by Date:</span>
           </div>
           {[
@@ -232,10 +232,10 @@ export default function Dashboard() {
             <button
               key={opt.key}
               onClick={() => setDateFilter(opt.key)}
-              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all
+              className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer
                 ${dateFilter === opt.key
-                  ? 'bg-indigo-600/15 border-indigo-500/30 text-indigo-300'
-                  : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                  ? 'bg-[#B8860B] border-[#B8860B] text-white'
+                  : 'bg-white border-[#D6C7A6] text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]'
                 }`}
             >
               {opt.label}
@@ -244,7 +244,7 @@ export default function Dashboard() {
           {dateFilter !== 'all' && (
             <button
               onClick={() => { setDateFilter('all'); setCustomFrom(''); setCustomTo(''); }}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
               title="Clear date filter"
             >
               <X size={14} />
@@ -254,26 +254,28 @@ export default function Dashboard() {
 
         {/* Custom Date Range Inputs */}
         {dateFilter === 'custom' && (
-          <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+          <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-[#FAF8F5] border border-[#E6D9B8]">
             <div className="flex items-center gap-2">
-              <label className="text-xs text-slate-400 font-semibold">From:</label>
+              <label className="text-xs text-[#4B5563] font-semibold">From:</label>
               <input
                 type="date"
                 value={customFrom}
                 onChange={(e) => setCustomFrom(e.target.value)}
-                className="glass-input text-xs py-1.5 px-3 w-40"
+                className="premium-input text-xs py-1 px-3 w-40"
+                style={{ height: '36px' }}
               />
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-xs text-slate-400 font-semibold">To:</label>
+              <label className="text-xs text-[#4B5563] font-semibold">To:</label>
               <input
                 type="date"
                 value={customTo}
                 onChange={(e) => setCustomTo(e.target.value)}
-                className="glass-input text-xs py-1.5 px-3 w-40"
+                className="premium-input text-xs py-1 px-3 w-40"
+                style={{ height: '36px' }}
               />
             </div>
-            <span className="text-[10px] text-slate-500 font-medium">
+            <span className="text-xs text-[#6B7280] font-medium">
               {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''} in range
             </span>
           </div>
@@ -283,46 +285,46 @@ export default function Dashboard() {
       {/* KPI Cards Grid */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {/* Total Products */}
-        <Link to="/products" className="glass-card p-6 rounded-xl flex items-center justify-between">
+        <Link to="/products" className="glass-card p-6 rounded-xl flex items-center justify-between hover:no-underline">
           <div>
-            <p className="text-sm font-medium text-slate-400">Total Products</p>
-            <h3 className="text-2xl font-bold mt-1 text-slate-100">{totalProducts}</h3>
-            <div className="flex items-center gap-1 mt-2 text-xs text-indigo-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#6B7280]">Total Products</p>
+            <h3 className="text-3xl font-black mt-1 text-[#1F2937]">{totalProducts}</h3>
+            <div className="flex items-center gap-1 mt-2 text-xs text-[#B8860B] font-semibold">
               <TrendingUp size={12} />
               <span>Active catalog</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <div className="p-3.5 rounded-xl bg-[#FAF4E7] text-[#B8860B] border border-[#E6D9B8] shadow-sm">
             <Package size={24} />
           </div>
         </Link>
 
         {/* Total Customers */}
-        <Link to="/customers" className="glass-card p-6 rounded-xl flex items-center justify-between">
+        <Link to="/customers" className="glass-card p-6 rounded-xl flex items-center justify-between hover:no-underline">
           <div>
-            <p className="text-sm font-medium text-slate-400">Total Customers</p>
-            <h3 className="text-2xl font-bold mt-1 text-slate-100">{totalCustomers}</h3>
-            <div className="flex items-center gap-1 mt-2 text-xs text-purple-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#6B7280]">Total Customers</p>
+            <h3 className="text-3xl font-black mt-1 text-[#1F2937]">{totalCustomers}</h3>
+            <div className="flex items-center gap-1 mt-2 text-xs text-[#B8860B] font-semibold">
               <TrendingUp size={12} />
               <span>Wholesale accounts</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20">
+          <div className="p-3.5 rounded-xl bg-[#FAF4E7] text-[#B8860B] border border-[#E6D9B8] shadow-sm">
             <Users size={24} />
           </div>
         </Link>
 
         {/* Total Orders */}
-        <Link to="/orders" className="glass-card p-6 rounded-xl flex items-center justify-between">
+        <Link to="/orders" className="glass-card p-6 rounded-xl flex items-center justify-between hover:no-underline">
           <div>
-            <p className="text-sm font-medium text-slate-400">Total Orders</p>
-            <h3 className="text-2xl font-bold mt-1 text-slate-100">{totalOrders}</h3>
-            <div className="flex items-center gap-1 mt-2 text-xs text-emerald-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#6B7280]">Total Orders</p>
+            <h3 className="text-3xl font-black mt-1 text-[#1F2937]">{totalOrders}</h3>
+            <div className="flex items-center gap-1 mt-2 text-xs text-emerald-600 font-semibold">
               <TrendingUp size={12} />
               <span>{dateFilterLabel}</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <div className="p-3.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 shadow-sm">
             <ShoppingCart size={24} />
           </div>
         </Link>
@@ -330,14 +332,14 @@ export default function Dashboard() {
         {/* Total Revenue */}
         <div className="glass-card p-6 rounded-xl flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-slate-400">Revenue</p>
-            <h3 className="text-2xl font-bold mt-1 text-slate-100">{formatCurrency(revenue)}</h3>
-            <div className="flex items-center gap-1 mt-2 text-xs text-sky-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-[#6B7280]">Revenue</p>
+            <h3 className="text-3xl font-black mt-1 text-[#1F2937]">{formatCurrency(revenue)}</h3>
+            <div className="flex items-center gap-1 mt-2 text-xs text-blue-600 font-semibold">
               <TrendingUp size={12} />
               <span>{dateFilterLabel}</span>
             </div>
           </div>
-          <div className="p-3 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+          <div className="p-3.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-200 shadow-sm">
             <IndianRupee size={24} />
           </div>
         </div>

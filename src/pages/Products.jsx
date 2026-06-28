@@ -462,10 +462,10 @@ export default function Products() {
         <div className="flex gap-3">
           <button 
             onClick={() => setActiveTab('all')} 
-            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all border ${
+            className={`px-5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
               activeTab === 'all' 
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/10' 
-                : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                ? 'bg-[#B8860B] text-white border-[#B8860B] shadow-md shadow-[#B8860B]/10' 
+                : 'bg-white border-[#D6C7A6] text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]'
             }`}
           >
             All Products
@@ -474,21 +474,21 @@ export default function Products() {
             <>
               <button 
                 onClick={() => setActiveTab('add')} 
-                className={`px-5 py-2 rounded-lg text-xs font-bold transition-all border flex items-center gap-1.5 ${
+                className={`px-5 py-2 rounded-lg text-xs font-bold transition-all border flex items-center gap-1.5 cursor-pointer ${
                   activeTab === 'add' 
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/10' 
-                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                    ? 'bg-[#B8860B] text-white border-[#B8860B] shadow-md shadow-[#B8860B]/10' 
+                    : 'bg-white border-[#D6C7A6] text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]'
                 }`}
               >
-                <Plus size={13} className={activeTab === 'add' ? 'text-white' : 'text-slate-400'} />
+                <Plus size={13} className={activeTab === 'add' ? 'text-white' : 'text-[#B8860B]'} />
                 Add Product
               </button>
               <button 
                 onClick={() => setActiveTab('manage')} 
-                className={`px-5 py-2 rounded-lg text-xs font-bold transition-all border ${
+                className={`px-5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
                   activeTab === 'manage' 
-                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-600/10' 
-                    : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                    ? 'bg-[#B8860B] text-white border-[#B8860B] shadow-md shadow-[#B8860B]/10' 
+                    : 'bg-white border-[#D6C7A6] text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]'
                 }`}
               >
                 Categories & Brands
@@ -505,11 +505,11 @@ export default function Products() {
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 p-4 rounded-xl glass-panel">
             {/* Search */}
             <div className="relative col-span-12 md:col-span-6">
-              <Search size={16} className="absolute left-3 top-3.5 text-slate-500" />
+              <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 type="text"
                 placeholder="Search products by name..."
-                className="w-full pl-10 pr-4 py-2.5 glass-input text-sm text-slate-100 placeholder-slate-500"
+                className="premium-input pl-10 pr-4 w-full"
                 style={{ paddingLeft: '2.5rem' }}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -519,13 +519,13 @@ export default function Products() {
             {/* Category Filter */}
             <div className="relative col-span-12 md:col-span-2">
               <select
-                className="w-full pl-3 pr-10 py-2.5 glass-input text-sm text-slate-100 appearance-none cursor-pointer"
+                className="premium-input pr-10 cursor-pointer appearance-none"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
-                <option value="All" className="bg-slate-900 text-slate-100">All Categories</option>
+                <option value="All">All Categories</option>
                 {categoriesFilterList.filter(c => c !== 'All').map(cat => (
-                  <option key={cat} value={cat} className="bg-slate-900 text-slate-100">{cat}</option>
+                  <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
@@ -538,13 +538,13 @@ export default function Products() {
             {/* Brand Filter */}
             <div className="relative col-span-12 md:col-span-2">
               <select
-                className="w-full pl-3 pr-10 py-2.5 glass-input text-sm text-slate-100 appearance-none cursor-pointer"
+                className="premium-input pr-10 cursor-pointer appearance-none"
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
               >
-                <option value="All" className="bg-slate-900 text-slate-100">All Brands</option>
+                <option value="All">All Brands</option>
                 {brandsFilterList.filter(b => b !== 'All').map(br => (
-                  <option key={br} value={br} className="bg-slate-900 text-slate-100">{br}</option>
+                  <option key={br} value={br}>{br}</option>
                 ))}
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
@@ -557,13 +557,13 @@ export default function Products() {
             {/* Status Filter */}
             <div className="relative col-span-12 md:col-span-2">
               <select
-                className="w-full pl-3 pr-10 py-2.5 glass-input text-sm text-slate-100 appearance-none cursor-pointer"
+                className="premium-input pr-10 cursor-pointer appearance-none"
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
               >
-                <option value="All" className="bg-slate-900 text-slate-100">All Statuses</option>
-                <option value="Active" className="bg-slate-900 text-slate-100">Active</option>
-                <option value="Inactive" className="bg-slate-900 text-slate-100">Inactive</option>
+                <option value="All">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -574,11 +574,11 @@ export default function Products() {
           </div>
 
           {/* Table Container */}
-          <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+          <div className="glass-panel rounded-2xl overflow-hidden border border-[#E6D9B8]">
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-sm">
+              <table className="premium-table">
                 <thead>
-                  <tr className="bg-slate-900/40 border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                  <tr>
                     <th className="p-4">PRODUCT NAME</th>
                     <th className="p-4">CATEGORY</th>
                     <th className="p-4">BRAND</th>
@@ -591,7 +591,7 @@ export default function Products() {
                     {!isStaff && <th className="p-4 text-center">ACTIONS</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-850/60 text-slate-300">
+                <tbody>
                   {filteredProducts.map((p) => {
                     const currentStock = p.stockQty !== undefined ? p.stockQty : p.stock;
                     const packs = getProductPacks(p);
@@ -600,7 +600,7 @@ export default function Products() {
                     const multiplier = (p.wholesaleUnit === 'Pack' || p.wholesaleUnit === 'Box') ? (parseInt(p.packQuantity) || 12) : 1;
 
                     return (
-                      <tr key={p.id} className="hover:bg-slate-900/10 border-b border-slate-850/30 transition-colors">
+                      <tr key={p.id}>
                         {/* Product Name & Icon */}
                         <td className="p-4">
                           <div className="flex items-center gap-3">

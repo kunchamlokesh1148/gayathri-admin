@@ -61,17 +61,17 @@ export default function Customers() {
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h2 className="text-2xl font-bold text-slate-100">Customer Directory</h2>
-        <p className="text-sm text-slate-400">Manage vendor accounts, contact profiles, and customer buying metrics</p>
+        <h2 className="text-2xl font-bold text-[#1F2937]">Customer Directory</h2>
+        <p className="text-sm text-[#4B5563]">Manage vendor accounts, contact profiles, and customer buying metrics</p>
       </div>
 
       {/* Search Bar */}
       <div className="relative p-4 rounded-xl glass-panel max-w-md">
-        <Search size={18} className="absolute left-7 top-7 text-slate-500" />
+        <Search size={18} className="absolute left-7.5 top-1/2 -translate-y-1/2 text-slate-400" />
         <input
           type="text"
           placeholder="Search by client name, company, email..."
-          className="w-full pl-10 pr-4 py-2.5 glass-input text-sm"
+          className="premium-input pl-10 pr-4"
           style={{ paddingLeft: '2.5rem' }}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -79,11 +79,11 @@ export default function Customers() {
       </div>
 
       {/* Customer Table */}
-      <div className="glass-panel rounded-2xl overflow-hidden border border-slate-800">
+      <div className="glass-panel rounded-2xl overflow-hidden border border-[#E6D9B8]">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="premium-table">
             <thead>
-              <tr className="bg-slate-900/40 border-b border-slate-800 text-xs font-semibold text-slate-400">
+              <tr>
                 <th className="p-4">Company & Client</th>
                 <th className="p-4">Contact Details</th>
                 <th className="p-4 text-center">Orders Placed</th>
@@ -91,43 +91,43 @@ export default function Customers() {
                 <th className="p-4 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-850 text-sm text-slate-300">
+            <tbody>
               {filteredCustomers.map(customer => {
                 const { orderCount, totalSpent } = getCustomerMetrics(customer.id);
                 return (
-                  <tr key={customer.id} className="hover:bg-slate-900/10">
+                  <tr key={customer.id}>
                     {/* Company and Client */}
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 rounded-lg">
+                        <div className="p-2.5 bg-[#FAF4E7] border border-[#E6D9B8] text-[#B8860B] rounded-lg">
                           <Building2 size={18} />
                         </div>
                         <div>
-                          <p className="font-bold text-slate-100">{customer.companyName || customer.shopName || 'N/A'}</p>
-                          <p className="text-xs text-slate-400 mt-0.5">{customer.name || customer.ownerName || 'N/A'}</p>
+                          <p className="font-bold text-[#1F2937] text-sm">{customer.companyName || customer.shopName || 'N/A'}</p>
+                          <p className="text-xs text-[#6B7280] mt-0.5">{customer.name || customer.ownerName || 'N/A'}</p>
                         </div>
                       </div>
                     </td>
 
                     {/* Contact details */}
                     <td className="p-4 space-y-1">
-                      <div className="flex items-center gap-1.5 text-xs text-slate-350">
-                        <Mail size={12} className="text-slate-500" />
+                      <div className="flex items-center gap-1.5 text-xs text-[#4B5563]">
+                        <Mail size={12} className="text-slate-400" />
                         <span>{customer.email || 'N/A'}</span>
                       </div>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-350">
-                        <Phone size={12} className="text-slate-500" />
+                      <div className="flex items-center gap-1.5 text-xs text-[#4B5563]">
+                        <Phone size={12} className="text-slate-400" />
                         <span>{customer.phone || customer.mobile || customer.mobileNumber || customer.phoneNo || 'N/A'}</span>
                       </div>
                     </td>
 
                     {/* Order count */}
-                    <td className="p-4 text-center font-bold text-slate-200">
+                    <td className="p-4 text-center font-bold text-[#1F2937]">
                       {orderCount}
                     </td>
 
                     {/* Total spend */}
-                    <td className="p-4 text-right font-extrabold text-indigo-400">
+                    <td className="p-4 text-right font-extrabold text-[#B8860B]">
                       ₹{totalSpent.toFixed(2)}
                     </td>
 
@@ -135,9 +135,10 @@ export default function Customers() {
                     <td className="p-4 text-right">
                       <Link 
                         to={`/customers/${customer.id}`}
-                        className="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg text-xs bg-slate-800 hover:bg-slate-750 text-slate-300 font-semibold border border-slate-700 transition-colors"
+                        className="premium-btn-secondary py-1.5 px-3 rounded-lg text-xs font-semibold hover:no-underline"
+                        style={{ height: '36px' }}
                       >
-                        <Eye size={12} />
+                        <Eye size={12} className="mr-1 inline" />
                         View File
                       </Link>
                     </td>
@@ -147,8 +148,8 @@ export default function Customers() {
 
               {filteredCustomers.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="p-12 text-center text-slate-500">
-                    <Users size={32} className="mx-auto mb-2 text-slate-650" />
+                  <td colSpan={5} className="p-12 text-center text-[#6B7280]">
+                    <Users size={32} className="mx-auto mb-2 text-slate-400" />
                     No customers found matching search parameters.
                   </td>
                 </tr>

@@ -172,96 +172,180 @@ export default function AddProduct() {
       )}
 
       {/* Main Form Box */}
-      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-slate-800 space-y-6">
-        <div className="border-b border-slate-800/80 pb-4">
-          <h2 className="text-base font-bold text-slate-200 tracking-wider uppercase">
+      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl space-y-6">
+        <div className="border-b border-[#E6D9B8] pb-4">
+          <h2 className="text-base font-bold text-[#1F2937] tracking-wider uppercase">
             REGISTER NEW WHOLESALE PRODUCT
           </h2>
         </div>
 
-        {/* Row 1: Name & Image URL */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Name *</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Product Name */}
+          <div className="flex flex-col lg:col-span-2 md:col-span-2 col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Name *</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
               placeholder="E.g. Maggi Masala Noodles"
-              className="glass-input text-sm"
+              className="premium-input"
               required
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Image URL</label>
+
+          {/* Product Image URL */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Image URL</label>
             <input
               type="text"
               name="imageUrl"
               value={formData.imageUrl}
               onChange={handleInputChange}
               placeholder="https://example.com/image.jpg"
-              className="glass-input text-sm"
+              className="premium-input"
             />
           </div>
-        </div>
 
-        {/* Row 2: Category & Brand */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Category *</label>
+          {/* Category */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Category *</label>
             <div className="relative">
               <select
                 name="category"
                 value={formData.category}
                 onChange={handleInputChange}
-                className="glass-input text-sm cursor-pointer appearance-none w-full pr-10"
-                style={{ paddingLeft: '1rem' }}
+                className="premium-input pr-10 cursor-pointer appearance-none"
                 required
               >
-                <option value="" className="bg-slate-900">Select Category</option>
+                <option value="">Select Category</option>
                 {categoriesList.map(cat => (
-                  <option key={cat.id} value={cat.name} className="bg-slate-900">{cat.name}</option>
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                 </svg>
               </div>
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Brand (Optional)</label>
+
+          {/* Brand */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Brand (Optional)</label>
             <div className="relative">
               <select
                 name="brand"
                 value={formData.brand}
                 onChange={handleInputChange}
-                className="glass-input text-sm cursor-pointer appearance-none w-full pr-10"
-                style={{ paddingLeft: '1rem' }}
+                className="premium-input pr-10 cursor-pointer appearance-none"
               >
-                <option value="" className="bg-slate-900">Select Brand</option>
+                <option value="">Select Brand</option>
                 {brandsList.map(b => (
-                  <option key={b.id} value={b.name} className="bg-slate-900">{b.name}</option>
+                  <option key={b.id} value={b.name}>{b.name}</option>
                 ))}
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
                 </svg>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Row 3: Financials & Packaging */}
-        <div className={`grid grid-cols-1 ${(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') ? 'sm:grid-cols-5' : 'sm:grid-cols-4'} gap-4`}>
+          {/* Wholesale Unit */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Wholesale Unit *</label>
+            <div className="relative">
+              <select
+                name="wholesaleUnit"
+                value={formData.wholesaleUnit}
+                onChange={handleInputChange}
+                className="premium-input pr-10 cursor-pointer appearance-none"
+                required
+              >
+                <option value="Piece">Piece</option>
+                <option value="Pack">Pack</option>
+                <option value="Box">Box</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Pack/Box Quantity (Conditional) */}
+          {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && (
+            <div className="flex flex-col col-span-1 animate-fade-in">
+              <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">{formData.wholesaleUnit} Quantity *</label>
+              <input
+                type="number"
+                name="packQuantity"
+                value={formData.packQuantity}
+                onChange={handleInputChange}
+                placeholder="E.g. 6"
+                className="premium-input"
+                required
+              />
+            </div>
+          )}
+
+          {/* Status Dropdown */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Status *</label>
+            <div className="relative">
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                className="premium-input pr-10 cursor-pointer appearance-none"
+                required
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Stock Quantity */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Stock Quantity *</label>
+            <input
+              type="number"
+              name="stockQty"
+              value={formData.stockQty}
+              onChange={handleInputChange}
+              placeholder="E.g. 100"
+              className="premium-input"
+              required
+            />
+          </div>
+
+          {/* Min Alert Limit */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Min Alert Limit *</label>
+            <input
+              type="number"
+              name="minStock"
+              value={formData.minStock}
+              onChange={handleInputChange}
+              placeholder="10"
+              className="premium-input"
+              required
+            />
+          </div>
+
           {/* Purchase Cost */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-              Purchase Cost (₹) - 1 Piece *
-            </label>
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Purchase Cost (₹) - 1 Piece *</label>
             <input
               type="number"
               name="purchaseCost"
@@ -269,21 +353,19 @@ export default function AddProduct() {
               onChange={handleInputChange}
               placeholder="10"
               step="0.01"
-              className="glass-input text-sm"
+              className="premium-input"
               required
             />
             {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.purchaseCost, formData.packQuantity) && (
-              <span className="text-[11px] text-indigo-600 font-bold mt-1 leading-tight">
-                Total {formData.wholesaleUnit} Purchase Cost: ₹{calculatePackTotal(formData.purchaseCost, formData.packQuantity)}
+              <span className="text-[11px] text-[#2563EB] font-bold mt-1.5 block leading-tight">
+                Total {formData.wholesaleUnit} Cost: ₹{calculatePackTotal(formData.purchaseCost, formData.packQuantity)}
               </span>
             )}
           </div>
 
           {/* Wholesale Price */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-              Wholesale Price (₹) - 1 Piece *
-            </label>
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Wholesale Price (₹) - 1 Piece *</label>
             <input
               type="number"
               name="wholesalePrice"
@@ -291,21 +373,19 @@ export default function AddProduct() {
               onChange={handleInputChange}
               placeholder="13"
               step="0.01"
-              className="glass-input text-sm"
+              className="premium-input"
               required
             />
             {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.wholesalePrice, formData.packQuantity) && (
-              <span className="text-[11px] text-indigo-600 font-bold mt-1 leading-tight">
-                Total {formData.wholesaleUnit} Wholesale Price: ₹{calculatePackTotal(formData.wholesalePrice, formData.packQuantity)}
+              <span className="text-[11px] text-[#2563EB] font-bold mt-1.5 block leading-tight">
+                Total {formData.wholesaleUnit} Price: ₹{calculatePackTotal(formData.wholesalePrice, formData.packQuantity)}
               </span>
             )}
           </div>
 
           {/* MRP */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-              MRP (₹) - 1 Piece *
-            </label>
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">MRP (₹) - 1 Piece *</label>
             <input
               type="number"
               name="mrp"
@@ -313,126 +393,34 @@ export default function AddProduct() {
               onChange={handleInputChange}
               placeholder="15"
               step="0.01"
-              className="glass-input text-sm"
+              className="premium-input"
               required
             />
             {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.mrp, formData.packQuantity) && (
-              <span className="text-[11px] text-indigo-650 text-indigo-600 font-bold mt-1 leading-tight">
+              <span className="text-[11px] text-[#2563EB] font-bold mt-1.5 block leading-tight">
                 Total {formData.wholesaleUnit} MRP: ₹{calculatePackTotal(formData.mrp, formData.packQuantity)}
               </span>
             )}
           </div>
 
-          {/* Wholesale Unit */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-              Wholesale Unit *
-            </label>
-            <div className="relative">
-              <select
-                name="wholesaleUnit"
-                value={formData.wholesaleUnit}
-                onChange={handleInputChange}
-                className="glass-input text-sm cursor-pointer appearance-none w-full pr-10"
-                style={{ paddingLeft: '1rem' }}
-                required
-              >
-                <option value="Piece" className="bg-slate-900">Piece</option>
-                <option value="Pack" className="bg-slate-900">Pack</option>
-                <option value="Box" className="bg-slate-900">Box</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          {/* Pack/Box Quantity */}
-          {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && (
-            <div className="flex flex-col gap-1.5 animate-fade-in">
-              <label className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                {formData.wholesaleUnit} Quantity *
-              </label>
-              <input
-                type="number"
-                name="packQuantity"
-                value={formData.packQuantity}
-                onChange={handleInputChange}
-                placeholder="E.g. 6"
-                className="glass-input text-sm"
-                required
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Row 4: Stock, Alert Limit, & Status */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Stock Quantity *</label>
-            <input
-              type="number"
-              name="stockQty"
-              value={formData.stockQty}
+          {/* Description */}
+          <div className="flex flex-col lg:col-span-3 md:col-span-2 col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
               onChange={handleInputChange}
-              placeholder="0"
-              className="glass-input text-sm"
-              required
+              placeholder="Product wholesale package details, weights, contents description..."
+              className="premium-input"
+              style={{ minHeight: '130px' }}
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Min Alert Limit *</label>
-            <input
-              type="number"
-              name="minStock"
-              value={formData.minStock}
-              onChange={handleInputChange}
-              placeholder="10"
-              className="glass-input text-sm"
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Status *</label>
-            <div className="relative">
-              <select
-                name="status"
-                value={formData.status}
-                onChange={handleInputChange}
-                className="glass-input text-sm cursor-pointer appearance-none w-full pr-10"
-                style={{ paddingLeft: '1rem' }}
-                required
-              >
-                <option value="Active" className="bg-slate-900">Active</option>
-                <option value="Inactive" className="bg-slate-900">Inactive</option>
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
-                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Row 5: Description */}
-        <div className="flex flex-col gap-1.5">
-          <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Product Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            placeholder="Product wholesale package details, weights, contents description..."
-            className="glass-input text-sm min-h-[6.5rem] resize-none"
-          />
         </div>
 
         {/* Form Actions */}
-        <div className="flex items-center justify-between border-t border-slate-800/80 pt-6">
-          <div className="text-xs text-slate-500 flex items-center gap-1.5">
-            <Sparkles size={12} className="text-indigo-400" />
+        <div className="flex items-center justify-between border-t border-[#E6D9B8] pt-6">
+          <div className="text-xs text-[#6B7280] flex items-center gap-1.5 font-medium">
+            <Sparkles size={12} className="text-[#B8860B]" />
             <span>Product registry immediately updates central warehouses catalog.</span>
           </div>
 
@@ -441,18 +429,18 @@ export default function AddProduct() {
               type="button" 
               onClick={() => navigate('/products')}
               disabled={loading}
-              className="glass-btn-secondary hover:cursor-pointer"
+              className="premium-btn-secondary"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={loading}
-              className="glass-btn-primary flex items-center gap-2 min-w-[7rem] justify-center hover:cursor-pointer"
+              className="premium-btn-primary min-w-[9rem]"
             >
               {loading ? (
                 <>
-                  <Loader2 size={16} className="animate-spin" />
+                  <Loader2 size={16} className="animate-spin mr-2" />
                   <span>Saving...</span>
                 </>
               ) : (

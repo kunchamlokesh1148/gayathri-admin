@@ -255,282 +255,283 @@ export default function EditProduct() {
       )}
 
       {/* Main Form Box */}
-      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl border border-slate-800 space-y-6">
+      <form onSubmit={handleSubmit} className="glass-panel p-6 md:p-8 rounded-2xl space-y-6">
         {error && formData.name && (
-          <div className="flex items-start gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-450 text-xs animate-shake">
+          <div className="flex items-start gap-3 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs animate-shake">
             <AlertCircle size={16} className="mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Left Column: Details */}
-          <div className="space-y-4">
-            {/* Product Title */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Product Name *</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Product Name */}
+          <div className="flex flex-col lg:col-span-2 md:col-span-2 col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Name *</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="premium-input"
+              placeholder="Enter product name"
+              required
+            />
+          </div>
+
+          {/* SKU */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#4B5563] mb-1.5 block">SKU Code (System Generated)</label>
+            <input
+              type="text"
+              name="sku"
+              value={formData.sku}
+              disabled
+              className="premium-input uppercase"
+            />
+          </div>
+
+          {/* Category */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Category *</label>
+            <div className="relative">
+              <select
+                name="category"
+                value={formData.category}
                 onChange={handleInputChange}
-                className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                className="premium-input pr-10 cursor-pointer appearance-none"
                 required
-              />
-            </div>
-
-            {/* SKU (Read-Only) and Category */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-500">SKU Code (System Generated)</label>
-                <input
-                  type="text"
-                  name="sku"
-                  value={formData.sku}
-                  disabled
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14]/50 border border-slate-800/85 rounded-lg text-sm text-slate-400 uppercase opacity-60 cursor-not-allowed"
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Category *</label>
-                <div className="relative">
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className="w-full pl-3 pr-10 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 appearance-none cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    required
-                  >
-                    {categoriesList.map(cat => (
-                      <option key={cat.id} value={cat.name} className="bg-[#070b14]">{cat.name}</option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-            </div>
-
-            {/* Brand and Wholesale Unit */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Brand *</label>
-                <div className="relative">
-                  <select
-                    name="brand"
-                    value={formData.brand}
-                    onChange={handleInputChange}
-                    className="w-full pl-3 pr-10 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 appearance-none cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    required
-                  >
-                    {brandsList.map(b => (
-                      <option key={b.id} value={b.name} className="bg-[#070b14]">{b.name}</option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Wholesale Unit *</label>
-                <div className="relative">
-                  <select
-                    name="wholesaleUnit"
-                    value={formData.wholesaleUnit}
-                    onChange={handleInputChange}
-                    className="w-full pl-3 pr-10 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 appearance-none cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="Piece" className="bg-[#070b14]">Piece</option>
-                    <option value="Pack" className="bg-[#070b14]">Pack</option>
-                    <option value="Box" className="bg-[#070b14]">Box</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Pack/Box Quantity */}
-            {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && (
-              <div className="flex flex-col gap-1.5 animate-fade-in">
-                <label className="text-xs font-semibold text-slate-400">{formData.wholesaleUnit} Quantity *</label>
-                <input
-                  type="number"
-                  name="packQuantity"
-                  value={formData.packQuantity}
-                  onChange={handleInputChange}
-                  placeholder="E.g. 12"
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-            )}
-
-            {/* Pricing Cost Structure */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Purchase Cost (₹) *</label>
-                <input
-                  type="number"
-                  name="purchaseCost"
-                  value={formData.purchaseCost}
-                  onChange={handleInputChange}
-                  step="0.01"
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  required
-                />
-                {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.purchaseCost, formData.packQuantity) && (
-                  <span className="text-[10px] text-[#00a3ff] font-bold mt-1 leading-tight">
-                    Total {formData.wholesaleUnit} Purchase Cost: ₹{calculatePackTotal(formData.purchaseCost, formData.packQuantity)}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Wholesale Price (₹) *</label>
-                <input
-                  type="number"
-                  name="wholesalePrice"
-                  value={formData.wholesalePrice}
-                  onChange={handleInputChange}
-                  step="0.01"
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  required
-                />
-                {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.wholesalePrice, formData.packQuantity) && (
-                  <span className="text-[10px] text-[#00a3ff] font-bold mt-1 leading-tight">
-                    Total {formData.wholesaleUnit} Wholesale Price: ₹{calculatePackTotal(formData.wholesalePrice, formData.packQuantity)}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">MRP (₹) *</label>
-                <input
-                  type="number"
-                  name="mrp"
-                  value={formData.mrp}
-                  onChange={handleInputChange}
-                  step="0.01"
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  required
-                />
-                {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.mrp, formData.packQuantity) && (
-                  <span className="text-[10px] text-[#00a3ff] font-bold mt-1 leading-tight">
-                    Total {formData.wholesaleUnit} MRP: ₹{calculatePackTotal(formData.mrp, formData.packQuantity)}
-                  </span>
-                )}
-              </div>
-                    {/* Stock, Min Alert Limit, Status */}
-            <div className="grid grid-cols-3 gap-3">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Stock (Units) *</label>
-                <input
-                  type="number"
-                  name="stockQty"
-                  value={formData.stockQty}
-                  onChange={handleInputChange}
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Min Alert Limit *</label>
-                <input
-                  type="number"
-                  name="minStock"
-                  value={formData.minStock}
-                  onChange={handleInputChange}
-                  className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-400">Status *</label>
-                <div className="relative">
-                  <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleInputChange}
-                    className="w-full pl-3 pr-10 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 appearance-none cursor-pointer focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    required
-                  >
-                    <option value="Active" className="bg-[#070b14]">Active</option>
-                    <option value="Inactive" className="bg-[#070b14]">Inactive</option>
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-                    </svg>
-                  </div>
-                </div>
+              >
+                {categoriesList.map(cat => (
+                  <option key={cat.id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Image and Description */}
-          <div className="space-y-4 flex flex-col">
-            {/* Description */}
-            <div className="flex flex-col gap-1.5 flex-1">
-              <label className="text-xs font-semibold text-slate-400">Description</label>
-              <textarea
-                name="description"
-                value={formData.description}
+          {/* Brand */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Brand *</label>
+            <div className="relative">
+              <select
+                name="brand"
+                value={formData.brand}
                 onChange={handleInputChange}
-                className="w-full pl-3 pr-3 py-2.5 bg-[#070b14] border border-slate-800/85 rounded-lg text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 flex-1 min-h-[5.5rem] resize-none"
+                className="premium-input pr-10 cursor-pointer appearance-none"
+                required
+              >
+                {brandsList.map(b => (
+                  <option key={b.id} value={b.name}>{b.name}</option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Wholesale Unit */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Wholesale Unit *</label>
+            <div className="relative">
+              <select
+                name="wholesaleUnit"
+                value={formData.wholesaleUnit}
+                onChange={handleInputChange}
+                className="premium-input pr-10 cursor-pointer appearance-none"
+                required
+              >
+                <option value="Piece">Piece</option>
+                <option value="Pack">Pack</option>
+                <option value="Box">Box</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Pack/Box Quantity (Conditional) */}
+          {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && (
+            <div className="flex flex-col col-span-1 animate-fade-in">
+              <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">{formData.wholesaleUnit} Quantity *</label>
+              <input
+                type="number"
+                name="packQuantity"
+                value={formData.packQuantity}
+                onChange={handleInputChange}
+                placeholder="E.g. 12"
+                className="premium-input"
+                required
               />
             </div>
+          )}
 
-            {/* Cloudinary Image Upload */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-400">Product Image</label>
-              <div className="relative border-2 border-dashed border-slate-800 rounded-xl hover:border-indigo-500/50 transition-colors p-4 flex flex-col items-center justify-center min-h-[9rem] bg-slate-950/20">
-                {imagePreview ? (
-                  <div className="relative w-full h-32 rounded-lg overflow-hidden group">
-                    <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <label className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-100 font-medium px-3 py-1.5 rounded-lg border border-slate-700 text-xs transition-all active:scale-98">
-                        Replace Image
-                        <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                      </label>
-                    </div>
-                  </div>
-                ) : (
-                  <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center gap-2 py-4">
-                    <div className="p-3 bg-slate-900 border border-slate-800 rounded-full text-indigo-400">
-                      <Upload size={20} />
-                    </div>
-                    <div className="text-center">
-                      <p className="text-xs font-semibold text-slate-300">Click to upload product image</p>
-                      <p className="text-[10px] text-slate-500 mt-0.5">Supports PNG, JPG, WEBP (Max 5MB)</p>
-                    </div>
-                    <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
-                  </label>
-                )}
+          {/* Status Dropdown */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Status *</label>
+            <div className="relative">
+              <select
+                name="status"
+                value={formData.status}
+                onChange={handleInputChange}
+                className="premium-input pr-10 cursor-pointer appearance-none"
+                required
+              >
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
               </div>
+            </div>
+          </div>
+
+          {/* Stock (Units) */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Stock (Units) *</label>
+            <input
+              type="number"
+              name="stockQty"
+              value={formData.stockQty}
+              onChange={handleInputChange}
+              className="premium-input"
+              placeholder="E.g. 100"
+              required
+            />
+          </div>
+
+          {/* Min Alert Limit */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Min Alert Limit *</label>
+            <input
+              type="number"
+              name="minStock"
+              value={formData.minStock}
+              onChange={handleInputChange}
+              className="premium-input"
+              placeholder="E.g. 10"
+              required
+            />
+          </div>
+
+          {/* Purchase Cost */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Purchase Cost (₹) *</label>
+            <input
+              type="number"
+              name="purchaseCost"
+              value={formData.purchaseCost}
+              onChange={handleInputChange}
+              step="0.01"
+              className="premium-input"
+              placeholder="E.g. 45.00"
+              required
+            />
+            {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.purchaseCost, formData.packQuantity) && (
+              <span className="text-[11px] text-[#2563EB] font-semibold mt-1.5 block leading-tight">
+                Total {formData.wholesaleUnit} Cost: ₹{calculatePackTotal(formData.purchaseCost, formData.packQuantity)}
+              </span>
+            )}
+          </div>
+
+          {/* Wholesale Price */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Wholesale Price (₹) *</label>
+            <input
+              type="number"
+              name="wholesalePrice"
+              value={formData.wholesalePrice}
+              onChange={handleInputChange}
+              step="0.01"
+              className="premium-input"
+              placeholder="E.g. 55.00"
+              required
+            />
+            {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.wholesalePrice, formData.packQuantity) && (
+              <span className="text-[11px] text-[#2563EB] font-semibold mt-1.5 block leading-tight">
+                Total {formData.wholesaleUnit} Price: ₹{calculatePackTotal(formData.wholesalePrice, formData.packQuantity)}
+              </span>
+            )}
+          </div>
+
+          {/* MRP */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">MRP (₹) *</label>
+            <input
+              type="number"
+              name="mrp"
+              value={formData.mrp}
+              onChange={handleInputChange}
+              step="0.01"
+              className="premium-input"
+              placeholder="E.g. 60.00"
+              required
+            />
+            {(formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box') && calculatePackTotal(formData.mrp, formData.packQuantity) && (
+              <span className="text-[11px] text-[#2563EB] font-semibold mt-1.5 block leading-tight">
+                Total {formData.wholesaleUnit} MRP: ₹{calculatePackTotal(formData.mrp, formData.packQuantity)}
+              </span>
+            )}
+          </div>
+
+          {/* Description */}
+          <div className="flex flex-col lg:col-span-2 md:col-span-2 col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              className="premium-input"
+              placeholder="Enter product description details..."
+              style={{ minHeight: '130px' }}
+            />
+          </div>
+
+          {/* Product Image */}
+          <div className="flex flex-col col-span-1">
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Image</label>
+            <div className="relative border-2 border-dashed border-[#D6C7A6] rounded-xl hover:border-[#C89B3C] transition-colors p-4 flex flex-col items-center justify-center bg-[#FAF8F5]" style={{ height: '130px' }}>
+              {imagePreview ? (
+                <div className="relative w-full h-full rounded-lg overflow-hidden group">
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <label className="cursor-pointer bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold px-3 py-1.5 rounded-lg border border-slate-700 text-xs transition-all active:scale-98">
+                      Replace Image
+                      <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                    </label>
+                  </div>
+                </div>
+              ) : (
+                <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center gap-1">
+                  <div className="p-2 bg-white border border-[#D6C7A6] rounded-full text-[#B8860B]">
+                    <Upload size={18} />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs font-semibold text-[#1F2937]">Click to upload product image</p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">PNG, JPG, WEBP (Max 5MB)</p>
+                  </div>
+                  <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+                </label>
+              )}
             </div>
           </div>
         </div>
 
         {/* Form Actions */}
-        <div className="flex items-center justify-between border-t border-slate-800/80 pt-6">
-          <div className="text-xs text-slate-500 flex items-center gap-1.5">
-            <Sparkles size={12} className="text-indigo-400" />
+        <div className="flex items-center justify-between border-t border-[#E6D9B8] pt-6 mt-4">
+          <div className="text-xs text-[#6B7280] flex items-center gap-1.5 font-medium">
+            <Sparkles size={12} className="text-[#B8860B]" />
             <span>Updates save directly to the Firestore collection</span>
           </div>
 
@@ -539,22 +540,22 @@ export default function EditProduct() {
               type="button" 
               onClick={() => navigate('/products')}
               disabled={saving}
-              className="bg-[#1e293b]/60 hover:bg-[#1e293b]/90 text-slate-350 border border-slate-700/50 py-2.5 px-6 rounded-lg transition-all active:scale-98 cursor-pointer font-bold text-xs"
+              className="premium-btn-secondary"
             >
               Cancel
             </button>
             <button 
               type="submit"
               disabled={saving}
-              className="bg-[#00a3ff] hover:bg-[#008fe0] text-white font-bold py-2.5 px-6 rounded-lg shadow-md transition-all active:scale-98 cursor-pointer text-xs flex items-center gap-2 min-w-[7rem] justify-center"
+              className="premium-btn-primary min-w-[9rem]"
             >
               {saving ? (
                 <>
-                  <Loader2 size={16} className="animate-spin" />
-                  <span>Saving...</span>
+                  <Loader2 size={16} className="animate-spin mr-2" />
+                  <span>Updating...</span>
                 </>
               ) : (
-                <span>Save Changes</span>
+                <span>Update Product</span>
               )}
             </button>
           </div>

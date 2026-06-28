@@ -309,15 +309,15 @@ export default function Orders() {
                 setSelectedTab(tab);
                 setExpandedOrder(null);
               }}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-t-lg border-b-2 transition-all whitespace-nowrap
+              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-bold rounded-t-lg border-b-2 transition-all whitespace-nowrap cursor-pointer
                 ${isActive 
-                  ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5' 
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  ? 'border-[#B8860B] text-[#B8860B] bg-[#FAF4E7]' 
+                  : 'border-transparent text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]/30'
                 }`}
             >
               {tab}
               <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold
-                ${isActive ? 'bg-indigo-600/20 text-indigo-300' : 'bg-slate-800 text-slate-400'}`}>
+                ${isActive ? 'bg-[#B8860B] text-white' : 'bg-slate-100 text-[#6B7280] border border-[#E6D9B8]'}`}>
                 {count}
               </span>
             </button>
@@ -327,8 +327,8 @@ export default function Orders() {
 
       {/* Date Filter */}
       <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1.5 text-slate-400 mr-1">
-          <Calendar size={14} />
+        <div className="flex items-center gap-1.5 text-[#1F2937] mr-1">
+          <Calendar size={14} className="text-[#B8860B]" />
           <span className="text-xs font-semibold">Filter by Date:</span>
         </div>
         {[
@@ -343,10 +343,10 @@ export default function Orders() {
           <button
             key={opt.key}
             onClick={() => setDateFilter(opt.key)}
-            className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all
+            className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all cursor-pointer
               ${dateFilter === opt.key
-                ? 'bg-indigo-600/15 border-indigo-500/30 text-indigo-300'
-                : 'bg-slate-900/50 border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                ? 'bg-[#B8860B] border-[#B8860B] text-white'
+                : 'bg-white border-[#D6C7A6] text-[#4B5563] hover:text-[#B8860B] hover:bg-[#FAF4E7]'
               }`}
           >
             {opt.label}
@@ -355,7 +355,7 @@ export default function Orders() {
         {dateFilter !== 'all' && (
           <button
             onClick={() => { setDateFilter('all'); setCustomFrom(''); setCustomTo(''); }}
-            className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-all"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all cursor-pointer"
             title="Clear date filter"
           >
             <X size={14} />
@@ -365,26 +365,28 @@ export default function Orders() {
 
       {/* Custom Date Range Inputs */}
       {dateFilter === 'custom' && (
-        <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+        <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-[#FAF8F5] border border-[#E6D9B8]">
           <div className="flex items-center gap-2">
-            <label className="text-xs text-slate-400 font-semibold">From:</label>
+            <label className="text-xs text-[#4B5563] font-semibold">From:</label>
             <input
               type="date"
               value={customFrom}
               onChange={(e) => setCustomFrom(e.target.value)}
-              className="glass-input text-xs py-1.5 px-3 w-40"
+              className="premium-input text-xs py-1 px-3 w-40"
+              style={{ height: '36px' }}
             />
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-xs text-slate-400 font-semibold">To:</label>
+            <label className="text-xs text-[#4B5563] font-semibold">To:</label>
             <input
               type="date"
               value={customTo}
               onChange={(e) => setCustomTo(e.target.value)}
-              className="glass-input text-xs py-1.5 px-3 w-40"
+              className="premium-input text-xs py-1 px-3 w-40"
+              style={{ height: '36px' }}
             />
           </div>
-          <span className="text-[10px] text-slate-500 font-medium">
+          <span className="text-xs text-[#6B7280] font-medium">
             {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''} found
           </span>
         </div>
@@ -453,9 +455,9 @@ export default function Orders() {
                   {/* Order Items Table */}
                   <div className="space-y-2">
                     <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Ordered items</p>
-                    <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/30">
-                      <table className="w-full text-left text-sm">
-                        <thead className="bg-slate-900/60 text-slate-400 text-xs border-b border-slate-800">
+                    <div className="border border-[#E6D9B8] rounded-xl overflow-hidden bg-white">
+                      <table className="premium-table">
+                        <thead>
                           <tr>
                             <th className="p-3">Product Name</th>
                             <th className="p-3 text-center">Price</th>
@@ -463,37 +465,37 @@ export default function Orders() {
                             <th className="p-3 text-right">Subtotal</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-800/50 text-slate-300">
+                        <tbody>
                           {order.items.map((item, idx) => (
                             <tr key={idx}>
-                              <td className="p-3 font-medium text-slate-200">{item.name}</td>
-                              <td className="p-3 text-center">₹{Number(item.price).toFixed(2)}</td>
-                              <td className="p-3 text-center font-bold">{item.quantity}</td>
-                              <td className="p-3 text-right font-bold text-slate-100">
+                              <td className="p-3 font-semibold text-[#1F2937]">{item.name}</td>
+                              <td className="p-3 text-center text-[#4B5563]">₹{Number(item.price).toFixed(2)}</td>
+                              <td className="p-3 text-center font-bold text-[#1F2937]">{item.quantity}</td>
+                              <td className="p-3 text-right font-bold text-[#1F2937]">
                                 ₹{(Number(item.price) * item.quantity).toFixed(2)}
                               </td>
                             </tr>
                           ))}
                         </tbody>
-                        <tfoot className="bg-slate-900/40 text-slate-350 border-t border-slate-800">
+                        <tfoot className="bg-[#FAF4E7]/60 text-[#5A3B00] border-t border-[#E6D9B8]">
                           {/* Subtotal */}
                           <tr>
-                            <td colSpan={3} className="p-2.5 text-right font-medium text-xs">Subtotal:</td>
-                            <td className="p-2.5 text-right font-semibold text-xs text-slate-200 font-mono">
+                            <td colSpan={3} className="p-2.5 text-right font-medium text-xs text-[#5A3B00]">Subtotal:</td>
+                            <td className="p-2.5 text-right font-semibold text-xs text-[#1F2937] font-mono">
                               ₹{(Number(order.subtotal) || (Number(order.totalAmount) - (Number(order.deliveryFee) || Number(order.deliveryCharge) || 0))).toFixed(2)}
                             </td>
                           </tr>
                           {/* Delivery Charge */}
                           <tr>
-                            <td colSpan={3} className="p-2.5 text-right font-medium text-xs">Delivery Charge:</td>
-                            <td className="p-2.5 text-right font-semibold text-xs text-slate-200 font-mono">
+                            <td colSpan={3} className="p-2.5 text-right font-medium text-xs text-[#5A3B00]">Delivery Charge:</td>
+                            <td className="p-2.5 text-right font-semibold text-xs text-[#1F2937] font-mono">
                               ₹{(Number(order.deliveryFee) || Number(order.deliveryCharge) || 0).toFixed(2)}
                             </td>
                           </tr>
                           {/* Grand Total */}
-                          <tr className="border-t border-slate-850">
-                            <td colSpan={3} className="p-3 text-right font-bold text-sm">Grand Total:</td>
-                            <td className="p-3 text-right font-extrabold text-sm text-indigo-400 font-mono">
+                          <tr className="border-t border-[#E6D9B8]">
+                            <td colSpan={3} className="p-3 text-right font-bold text-sm text-[#5A3B00]">Grand Total:</td>
+                            <td className="p-3 text-right font-extrabold text-sm text-[#B8860B] font-mono">
                               ₹{Number(order.totalAmount).toFixed(2)}
                             </td>
                           </tr>
