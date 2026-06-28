@@ -17,7 +17,6 @@ import {
    MessageSquare,
    LogOut
 } from 'lucide-react';
-import { isMock } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 
 export default function Layout({ children }) {
@@ -163,14 +162,6 @@ export default function Layout({ children }) {
           </div>
 
           <div className="flex items-center gap-4">
-            {/* Database Banner Indicator */}
-            {isMock && (
-              <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-amber-600 bg-amber-50 border border-amber-200 rounded-full">
-                <Globe size={12} className="animate-spin" style={{ animationDuration: '6s' }} />
-                Running in Local Mock Mode
-              </span>
-            )}
-            
             {/* User Profile Card */}
             <div className="flex items-center gap-3 pl-3 border-l border-[#E6D9B8]">
               <div className="hidden text-right md:block">

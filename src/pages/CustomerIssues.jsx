@@ -14,7 +14,7 @@ import {
   Building2, 
   AlertCircle
 } from 'lucide-react';
-import { db, isMock } from '../firebase/config';
+import { db } from '../firebase/config';
 import { 
   collection, 
   onSnapshot, 
@@ -23,46 +23,6 @@ import {
   deleteDoc 
 } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
-
-// Realistic sample tickets for fallback/mock seeding
-const MOCK_SEED_ISSUES = [
-  {
-    id: 'iss_1',
-    customerName: 'Ramesh Kumar',
-    shopName: 'Kumar Provisions',
-    mobileNumber: '+91 98765 43210',
-    email: 'ramesh@kumarprov.com',
-    address: 'No. 12, Market Road, Ward 4, Yeshwanthpur, Bengaluru, Karnataka - 560022',
-    issueType: 'Damaged Items Delivered',
-    description: 'Received the delivery for Order #ORD-65 today. Upon opening the carton, 3 packs of Yippee Noodles were found punctured, causing the contents to spill. Please issue a refund or send replacements for these units.',
-    raisedDate: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    status: 'Pending'
-  },
-  {
-    id: 'iss_2',
-    customerName: 'Anitha Sen',
-    shopName: 'Sen Supermarket',
-    mobileNumber: '+91 87654 32109',
-    email: 'anitha@sensuper.com',
-    address: '77/A, Outer Ring Road, Hebbal Phase 2, Bengaluru, Karnataka - 560024',
-    issueType: 'Incorrect Billing',
-    description: 'In invoice INV-2026-089, I was billed for 12 packs of Coca Cola 2L, but only received 10 packs in the physical delivery. I checked with the delivery driver, and they advised me to raise a ticket to adjust the balance amount.',
-    raisedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-    status: 'In Progress'
-  },
-  {
-    id: 'iss_3',
-    customerName: 'Vikram Shah',
-    shopName: 'Shah & Sons Wholesalers',
-    mobileNumber: '+91 76543 21098',
-    email: 'vikram@shahandsons.in',
-    address: 'Plot 42, GIDC Industrial Estate Sector 11, Gandhinagar, Gujarat - 382011',
-    issueType: 'Portal Order Failure',
-    description: 'While submitting my order yesterday, the checkout screen hung, and I received a Firestore transaction timeout error. My cart was emptied, but I did not receive an order ID. Need confirmation if the order went through.',
-    raisedDate: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(), // 4 days ago
-    status: 'Resolved'
-  }
-];
 
 export default function CustomerIssues() {
   const [loading, setLoading] = useState(true);
@@ -75,108 +35,45 @@ export default function CustomerIssues() {
 
   // Sync / Fetch support issues in real-time
   useEffect(() => {
-    let unsubscribe = () => {};
-    let active = true;
+    setLoading(true);
+    const unsubscribe = onSnapshot(
+      collection(db, 'issues'),
+      (snap) => {
+        const fetched = snap.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            customerName: data.customerName || data.name || 'Unknown Client',
+            shopName: data.shopName || data.companyName || 'Unknown Shop',
+            mobileNumber: data.mobileNumber || data.mobile || data.phone || '',
+            email: data.email || '',
+            address: data.address || data.shippingAddress || '',
+            issueType: data.issueType || data.type || data.category || 'General Issue',
+            description: data.description || data.details || '',
+            raisedDate: data.raisedDate || data.createdAt || new Date().toISOString(),
+            status: data.status || 'Pending'
+          };
+        });
 
-    const timer = setTimeout(() => {
-      if (!active) return;
-      if (!isMock) {
-        setLoading(true);
-        unsubscribe = onSnapshot(
-          collection(db, 'issues'),
-          (snap) => {
-            if (!active) return;
-            const fetched = snap.docs.map((doc) => {
-              const data = doc.data();
-              return {
-                id: doc.id,
-                customerName: data.customerName || data.name || 'Unknown Client',
-                shopName: data.shopName || data.companyName || 'Unknown Shop',
-                mobileNumber: data.mobileNumber || data.mobile || data.phone || '',
-                email: data.email || '',
-                address: data.address || data.shippingAddress || '',
-                issueType: data.issueType || data.type || data.category || 'General Issue',
-                description: data.description || data.details || '',
-                raisedDate: data.raisedDate || data.createdAt || new Date().toISOString(),
-                status: data.status || 'Pending'
-              };
-            });
-
-            // Sort by raisedDate desc in JS to avoid index requirement
-            fetched.sort((a, b) => new Date(b.raisedDate) - new Date(a.raisedDate));
-            setIssues(fetched);
-            setLoading(false);
-          },
-          (error) => {
-            console.error('[CustomerIssues] Firestore onSnapshot error:', error);
-            if (active) setLoading(false);
-          }
-        );
-      } else {
-        // Mock Local Storage Implementation
-        setLoading(true);
-        const loadLocalIssues = () => {
-          let localIssues = JSON.parse(localStorage.getItem('wholesale_issues'));
-          if (!localIssues || localIssues.length === 0) {
-            localStorage.setItem('wholesale_issues', JSON.stringify(MOCK_SEED_ISSUES));
-            localIssues = MOCK_SEED_ISSUES;
-          }
-          
-          // Normalize fields in local mock data just in case
-          const normalized = localIssues.map(item => ({
-            ...item,
-            customerName: item.customerName || item.name || 'Unknown Client',
-            shopName: item.shopName || item.companyName || 'Unknown Shop',
-            mobileNumber: item.mobileNumber || item.mobile || item.phone || '',
-            raisedDate: item.raisedDate || new Date().toISOString(),
-            status: item.status || 'Pending'
-          }));
-
-          normalized.sort((a, b) => new Date(b.raisedDate) - new Date(a.raisedDate));
-          if (active) {
-            setIssues(normalized);
-            setLoading(false);
-          }
-        };
-
-        loadLocalIssues();
-
-        // Listen for updates made in the same window context
-        const handleMockUpdate = () => {
-          loadLocalIssues();
-        };
-        window.addEventListener('mock-issues-updated', handleMockUpdate);
-        window.addEventListener('storage', handleMockUpdate);
-
-        unsubscribe = () => {
-          window.removeEventListener('mock-issues-updated', handleMockUpdate);
-          window.removeEventListener('storage', handleMockUpdate);
-        };
+        // Sort by raisedDate desc in JS to avoid index requirement
+        fetched.sort((a, b) => new Date(b.raisedDate) - new Date(a.raisedDate));
+        setIssues(fetched);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('[CustomerIssues] Firestore onSnapshot error:', error);
+        setLoading(false);
       }
-    }, 0);
+    );
 
-    return () => {
-      active = false;
-      clearTimeout(timer);
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   // Update support ticket status immediately
   const handleUpdateStatus = async (issueId, newStatus) => {
     try {
       setUpdatingId(issueId);
-      if (!isMock) {
-        await updateDoc(doc(db, 'issues', issueId), { status: newStatus });
-      } else {
-        const local = JSON.parse(localStorage.getItem('wholesale_issues')) || [];
-        const idx = local.findIndex((i) => i.id === issueId);
-        if (idx !== -1) {
-          local[idx].status = newStatus;
-          localStorage.setItem('wholesale_issues', JSON.stringify(local));
-          window.dispatchEvent(new Event('mock-issues-updated'));
-        }
-      }
+      await updateDoc(doc(db, 'issues', issueId), { status: newStatus });
 
       // If the currently viewed issue modal is open, sync its state too
       if (selectedIssue && selectedIssue.id === issueId) {
@@ -198,14 +95,7 @@ export default function CustomerIssues() {
 
     try {
       setUpdatingId(issueId);
-      if (!isMock) {
-        await deleteDoc(doc(db, 'issues', issueId));
-      } else {
-        const local = JSON.parse(localStorage.getItem('wholesale_issues')) || [];
-        const filtered = local.filter((i) => i.id !== issueId);
-        localStorage.setItem('wholesale_issues', JSON.stringify(filtered));
-        window.dispatchEvent(new Event('mock-issues-updated'));
-      }
+      await deleteDoc(doc(db, 'issues', issueId));
 
       if (selectedIssue && selectedIssue.id === issueId) {
         setSelectedIssue(null);

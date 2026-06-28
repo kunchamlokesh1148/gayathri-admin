@@ -27,7 +27,7 @@ import {
 import { dbService } from '../services/db';
 import { uploadImageToCloudinary } from '../services/cloudinary';
 import { useAuth } from '../context/AuthContext';
-import { auth, firebaseConfig, isMock } from '../firebase/config';
+import { auth, firebaseConfig } from '../firebase/config';
 import { initializeApp, deleteApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth';
 
@@ -296,7 +296,7 @@ export default function Settings() {
       showToast("Banner image uploaded successfully!");
     } catch (err) {
       console.error(err);
-      showToast("Failed to upload image. Using mock preview.", "error");
+      showToast("Failed to upload image. Please try again.", "error");
     } finally {
       setUploadingImage(false);
     }
@@ -432,45 +432,25 @@ export default function Settings() {
     }
     setLoading(true);
     try {
-      if (isMock) {
-        // Mock update password in localStorage
-        const list = JSON.parse(localStorage.getItem('wholesale_admins')) || [
-          { id: 'admin_default', name: 'System Admin', email: 'admin@srigayathri.com', role: 'Super Admin', createdAt: new Date().toISOString() }
-        ];
-        const session = JSON.parse(localStorage.getItem('wholesale_admin_session'));
-        if (session) {
-          const idx = list.findIndex(c => c.email.toLowerCase() === session.email.toLowerCase());
-          if (idx !== -1) {
-            const oldPass = list[idx].password || 'admin123';
-            if (securityForm.oldPassword !== oldPass) {
-              throw new Error("Invalid current password. Please check your credentials.");
-            }
-            list[idx].password = securityForm.newPassword;
-            localStorage.setItem('wholesale_admins', JSON.stringify(list));
-            localStorage.setItem('wholesale_admin_session', JSON.stringify(list[idx]));
-          }
+      const currentUser = auth.currentUser;
+      if (!currentUser) throw new Error("Session expired. Please sign in again.");
+      
+      const credential = EmailAuthProvider.credential(currentUser.email, securityForm.oldPassword);
+      try {
+        await reauthenticateWithCredential(currentUser, credential);
+      } catch (reauthErr) {
+        console.error("Reauthentication failed:", reauthErr);
+        throw new Error("Invalid current password. Please check your credentials.");
+      }
+      
+      try {
+        await updatePassword(currentUser, securityForm.newPassword);
+      } catch (pwdErr) {
+        console.error("Password update failed:", pwdErr);
+        if (pwdErr.code === 'auth/weak-password') {
+          throw new Error("Password must be at least 6 characters long.");
         }
-      } else {
-        const currentUser = auth.currentUser;
-        if (!currentUser) throw new Error("Session expired. Please sign in again.");
-        
-        const credential = EmailAuthProvider.credential(currentUser.email, securityForm.oldPassword);
-        try {
-          await reauthenticateWithCredential(currentUser, credential);
-        } catch (reauthErr) {
-          console.error("Reauthentication failed:", reauthErr);
-          throw new Error("Invalid current password. Please check your credentials.");
-        }
-        
-        try {
-          await updatePassword(currentUser, securityForm.newPassword);
-        } catch (pwdErr) {
-          console.error("Password update failed:", pwdErr);
-          if (pwdErr.code === 'auth/weak-password') {
-            throw new Error("Password must be at least 6 characters long.");
-          }
-          throw new Error("Something went wrong. Please try again.");
-        }
+        throw new Error("Something went wrong. Please try again.");
       }
       showToast("Admin password changed successfully!");
       setSecurityForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
@@ -556,32 +536,29 @@ export default function Settings() {
           return;
         }
 
-        let uid = 'admin_' + Math.random().toString(36).substr(2, 9);
-
-        if (!isMock) {
-          let secondaryApp;
-          try {
-            const appName = `SecondaryAuthApp_${Date.now()}`;
-            secondaryApp = initializeApp(firebaseConfig, appName);
-            const secondaryAuth = getAuth(secondaryApp);
-            
-            const userCredential = await createUserWithEmailAndPassword(secondaryAuth, adminForm.email.trim(), adminForm.password);
-            uid = userCredential.user.uid;
-          } catch (authErr) {
-            console.error("Auth user creation failed:", authErr);
-            if (authErr.code === 'auth/email-already-in-use') {
-              showToast("An account with this email already exists.", "error");
-            } else if (authErr.code === 'auth/weak-password') {
-              showToast("Password must be at least 6 characters long.", "error");
-            } else {
-              showToast("Something went wrong. Please try again.", "error");
-            }
-            setLoading(false);
-            return;
-          } finally {
-            if (secondaryApp) {
-              await deleteApp(secondaryApp);
-            }
+        let uid;
+        let secondaryApp;
+        try {
+          const appName = `SecondaryAuthApp_${Date.now()}`;
+          secondaryApp = initializeApp(firebaseConfig, appName);
+          const secondaryAuth = getAuth(secondaryApp);
+          
+          const userCredential = await createUserWithEmailAndPassword(secondaryAuth, adminForm.email.trim(), adminForm.password);
+          uid = userCredential.user.uid;
+        } catch (authErr) {
+          console.error("Auth user creation failed:", authErr);
+          if (authErr.code === 'auth/email-already-in-use') {
+            showToast("An account with this email already exists.", "error");
+          } else if (authErr.code === 'auth/weak-password') {
+            showToast("Password must be at least 6 characters long.", "error");
+          } else {
+            showToast("Something went wrong. Please try again.", "error");
+          }
+          setLoading(false);
+          return;
+        } finally {
+          if (secondaryApp) {
+            await deleteApp(secondaryApp);
           }
         }
 

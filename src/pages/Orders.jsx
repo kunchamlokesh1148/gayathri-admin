@@ -123,7 +123,7 @@ export default function Orders() {
     try {
       setUpdatingId(orderId);
       
-      // Update order document in Firestore/MockDB with credentials and assignedAt
+      // Update order document in Firestore with credentials and assignedAt
       await dbService.updateOrder(orderId, {
         deliveryStaffId: selectedStaff.uid || selectedStaff.id,
         deliveryStaffName: selectedStaff.name,

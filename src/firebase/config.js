@@ -11,30 +11,8 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-let app;
-let db = null;
-let auth = null;
-let isMock = false;
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Determine if we have valid Firebase credentials
-const hasConfig = 
-  firebaseConfig.apiKey && 
-  firebaseConfig.apiKey !== 'YOUR_API_KEY' && 
-  firebaseConfig.apiKey.trim() !== '';
-
-if (hasConfig) {
-  try {
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    auth = getAuth(app);
-    console.log("Firebase initialized successfully.");
-  } catch (error) {
-    console.error("Firebase initialization failed. Falling back to Mock Storage.", error);
-    isMock = true;
-  }
-} else {
-  console.log("No valid Firebase configuration. Running in Local Storage Mock Mode.");
-  isMock = true;
-}
-
-export { db, auth, isMock, firebaseConfig };
+export { db, auth, firebaseConfig };

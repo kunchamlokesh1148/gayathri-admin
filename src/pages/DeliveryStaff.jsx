@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Truck, Plus, Trash2, AlertCircle, Phone, Check, Mail, Lock, User, RefreshCw } from 'lucide-react';
 import { dbService } from '../services/db';
-import { isMock, firebaseConfig } from '../firebase/config';
+import { firebaseConfig } from '../firebase/config';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { initializeApp, deleteApp } from 'firebase/app';
 
@@ -96,25 +96,23 @@ export default function DeliveryStaff() {
         return;
       }
 
-      let uid = 'stf_' + Math.random().toString(36).substr(2, 9);
+      let uid;
 
-      if (!isMock) {
-        // Create user in Firebase Auth using a secondary Firebase App instance
-        // This prevents the admin from being signed out
-        let secondaryApp;
-        try {
-          const appName = `SecondaryAuthApp_${Date.now()}`;
-          secondaryApp = initializeApp(firebaseConfig, appName);
-          const secondaryAuth = getAuth(secondaryApp);
-          
-          const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email.trim(), password);
-          uid = userCredential.user.uid;
-        } catch (authErr) {
-          throw new Error(mapAuthError(authErr));
-        } finally {
-          if (secondaryApp) {
-            await deleteApp(secondaryApp);
-          }
+      // Create user in Firebase Auth using a secondary Firebase App instance
+      // This prevents the admin from being signed out
+      let secondaryApp;
+      try {
+        const appName = `SecondaryAuthApp_${Date.now()}`;
+        secondaryApp = initializeApp(firebaseConfig, appName);
+        const secondaryAuth = getAuth(secondaryApp);
+        
+        const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email.trim(), password);
+        uid = userCredential.user.uid;
+      } catch (authErr) {
+        throw new Error(mapAuthError(authErr));
+      } finally {
+        if (secondaryApp) {
+          await deleteApp(secondaryApp);
         }
       }
 
@@ -172,27 +170,25 @@ export default function DeliveryStaff() {
     try {
       setSaving(true);
 
-      if (!isMock) {
-        // Authenticate as the driver on a secondary App instance to delete their Firebase Authentication record
-        let secondaryApp;
-        try {
-          const appName = `SecondaryAuthApp_Delete_${Date.now()}`;
-          secondaryApp = initializeApp(firebaseConfig, appName);
-          const secondaryAuth = getAuth(secondaryApp);
-          
-          // Sign in as driver (using their stored password from Firestore)
-          await signInWithEmailAndPassword(secondaryAuth, driver.email, driver.password);
-          if (secondaryAuth.currentUser) {
-            await deleteUser(secondaryAuth.currentUser);
-            console.log("Successfully deleted user from Firebase Authentication.");
-          }
-        } catch (authErr) {
-          console.warn("Failed to delete user from Firebase Authentication (they might not have an Auth record):", authErr);
-          // We don't block deletion from Firestore if Auth deletion fails
-        } finally {
-          if (secondaryApp) {
-            await deleteApp(secondaryApp);
-          }
+      // Authenticate as the driver on a secondary App instance to delete their Firebase Authentication record
+      let secondaryApp;
+      try {
+        const appName = `SecondaryAuthApp_Delete_${Date.now()}`;
+        secondaryApp = initializeApp(firebaseConfig, appName);
+        const secondaryAuth = getAuth(secondaryApp);
+        
+        // Sign in as driver (using their stored password from Firestore)
+        await signInWithEmailAndPassword(secondaryAuth, driver.email, driver.password);
+        if (secondaryAuth.currentUser) {
+          await deleteUser(secondaryAuth.currentUser);
+          console.log("Successfully deleted user from Firebase Authentication.");
+        }
+      } catch (authErr) {
+        console.warn("Failed to delete user from Firebase Authentication (they might not have an Auth record):", authErr);
+        // We don't block deletion from Firestore if Auth deletion fails
+      } finally {
+        if (secondaryApp) {
+          await deleteApp(secondaryApp);
         }
       }
 
