@@ -199,15 +199,30 @@ export default function Dashboard() {
     <div className="space-y-8 animate-fade-in">
       {/* Top Banner alert for low stock */}
       {lowStockCount > 0 && (
-        <div className="flex items-center justify-between p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-300">
+        <div 
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 rounded-xl border shadow-sm"
+          style={{ backgroundColor: '#FFF6D6', borderColor: '#E6D9B8' }}
+        >
           <div className="flex items-center gap-3">
-            <AlertTriangle className="text-amber-500" size={20} />
+            <AlertTriangle style={{ color: '#FF8C00' }} size={20} className="shrink-0" />
             <div>
-              <span className="font-semibold">{lowStockCount} Products are currently running low on stock!</span>
-              <p className="text-xs text-amber-400/80">Action required to ensure fulfillment chains are not disrupted.</p>
+              <span className="font-bold text-sm block" style={{ color: '#8A4B00' }}>
+                {lowStockCount} Products are currently running low on stock!
+              </span>
+              <p className="text-xs font-medium mt-0.5" style={{ color: '#5B4636' }}>
+                Action required to ensure fulfillment chains are not disrupted.
+              </p>
             </div>
           </div>
-          <Link to="/inventory" className="text-xs font-semibold bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-3 py-1.5 rounded-lg border border-amber-500/30 transition-all">
+          <Link 
+            to="/inventory" 
+            className="text-xs font-bold px-3.5 py-1.5 rounded-lg border transition-all cursor-pointer shadow-sm hover:opacity-90 active:scale-98"
+            style={{ 
+              backgroundColor: '#C28700', 
+              borderColor: '#A87500', 
+              color: '#FFFFFF' 
+            }}
+          >
             Review Inventory
           </Link>
         </div>

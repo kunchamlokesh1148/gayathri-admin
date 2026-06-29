@@ -1,13 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle, Sparkles, Upload } from 'lucide-react';
 import { dbService } from '../services/db';
+import { uploadImageToCloudinary } from '../services/cloudinary';
 
 export default function AddProduct() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [uploadProgress, setUploadProgress] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [dragActive, setDragActive] = useState(false);
 
   const [categoriesList, setCategoriesList] = useState([]);
   const [brandsList, setBrandsList] = useState([]);
@@ -49,6 +53,81 @@ export default function AddProduct() {
     };
     loadOptions();
   }, []);
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      await processImageFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    if (e.target.files && e.target.files[0]) {
+      await processImageFile(e.target.files[0]);
+    }
+  };
+
+  const processImageFile = async (file) => {
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Image size must be smaller than 5MB");
+      return;
+    }
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      setError("Only JPG, PNG, and WEBP image formats are supported");
+      return;
+    }
+    
+    setError('');
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+
+    setUploadProgress('Uploading image to Cloudinary...');
+    try {
+      const url = await uploadImageToCloudinary(file);
+      setFormData(prev => ({ ...prev, imageUrl: url }));
+      setUploadProgress('Image uploaded successfully!');
+      setTimeout(() => setUploadProgress(''), 3000);
+    } catch (uploadErr) {
+      console.error(uploadErr);
+      setError(uploadErr.message || "Cloudinary upload failed");
+      setUploadProgress('');
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview('');
+    setFormData(prev => ({ ...prev, imageUrl: '' }));
+    setError('');
+  };
+
+  const handleUrlChange = (e) => {
+    const url = e.target.value;
+    setFormData(prev => ({ ...prev, imageUrl: url }));
+    if (url.trim()) {
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        setImagePreview(url);
+        setError('');
+      } else {
+        setError('Please enter a valid image URL starting with http:// or https://');
+      }
+    } else {
+      setImagePreview('');
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -194,18 +273,7 @@ export default function AddProduct() {
             />
           </div>
 
-          {/* Product Image URL */}
-          <div className="flex flex-col col-span-1">
-            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Image URL</label>
-            <input
-              type="text"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleInputChange}
-              placeholder="https://example.com/image.jpg"
-              className="premium-input"
-            />
-          </div>
+
 
           {/* Category */}
           <div className="flex flex-col col-span-1">
@@ -401,6 +469,74 @@ export default function AddProduct() {
                 Total {formData.wholesaleUnit} MRP: ₹{calculatePackTotal(formData.mrp, formData.packQuantity)}
               </span>
             )}
+          </div>
+
+          {/* Product Image Section */}
+          <div className="flex flex-col col-span-1 lg:col-span-3 md:col-span-2 gap-1.5 mt-2">
+            <label className="text-sm font-bold text-[#1F2937] mb-1 block">Product Image</label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+              {/* Image Upload Drag & Drop Box */}
+              <div 
+                onDragEnter={handleDrag}
+                onDragOver={handleDrag}
+                onDragLeave={handleDrag}
+                onDrop={handleDrop}
+                className={`relative border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-6 bg-[#FAF8F5] transition-all
+                  ${dragActive ? 'border-[#C89B3C] bg-[#FFF8E6]' : 'border-[#D6C7A6] hover:border-[#C89B3C]'}
+                `}
+                style={{ minHeight: '200px' }}
+              >
+                {imagePreview ? (
+                  <div className="relative w-full h-full min-h-[160px] rounded-lg overflow-hidden group flex flex-col items-center justify-center">
+                    <img src={imagePreview} alt="Preview" className="max-h-[160px] object-contain rounded-lg shadow-sm" />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                      <label className="cursor-pointer bg-[#C89B3C] hover:bg-[#B8860B] text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all active:scale-98">
+                        Replace Image
+                        <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
+                      </label>
+                      <button 
+                        type="button"
+                        onClick={handleRemoveImage}
+                        className="bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all active:scale-98"
+                      >
+                        Remove Image
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center gap-2 text-center">
+                    <div className="p-3 bg-white border border-[#D6C7A6] rounded-full text-[#B8860B] shadow-sm">
+                      <Upload size={22} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-[#1F2937]">📁 Drag & Drop Image Here</p>
+                      <p className="text-[11px] text-[#B8860B] font-semibold mt-1">OR Click to Choose Image</p>
+                      <p className="text-[10px] text-slate-500 mt-1">Supported: JPG, PNG, WEBP (Max 5MB)</p>
+                    </div>
+                    <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleFileChange} />
+                  </label>
+                )}
+              </div>
+
+              {/* Paste Image URL Column */}
+              <div className="flex flex-col justify-center space-y-4 min-h-[200px] p-6 bg-white border border-[#D6C7A6] rounded-2xl">
+                <div className="text-left">
+                  <h4 className="text-xs font-black uppercase text-[#8A4B00] tracking-wider">OR Paste Image URL</h4>
+                  <p className="text-[11px] text-slate-500 mt-1">If you already have a hosted image link, paste it directly below.</p>
+                </div>
+                <div className="flex flex-col">
+                  <label className="text-[11px] font-bold text-[#4B5563] mb-1.5 uppercase">Image Link URL</label>
+                  <input
+                    type="text"
+                    name="imageUrl"
+                    value={formData.imageUrl}
+                    onChange={handleUrlChange}
+                    placeholder="https://example.com/image.jpg"
+                    className="premium-input"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Description */}
