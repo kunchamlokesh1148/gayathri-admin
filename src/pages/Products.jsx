@@ -255,7 +255,7 @@ export default function Products() {
       setFormLoading(true);
       
       const generatedSku = 'SKU-' + Math.floor(100000 + Math.random() * 900000);
-      const finalImageUrl = formData.imageUrl.trim() || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600';
+      const finalImageUrl = formData.imageUrl.trim();
 
       const isPackOrBox = formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box';
       const purchasePackTotal = purchaseCostNum * (isPackOrBox ? packQuantityNum : 1);
@@ -658,8 +658,15 @@ export default function Products() {
                         {/* Product Name & Icon */}
                         <td className="p-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-900/40 border border-slate-800 flex-shrink-0">
-                              <Package size={18} className="text-slate-400" />
+                            <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-slate-900/40 border border-slate-800 overflow-hidden flex-shrink-0">
+                              <img
+                                src={p.imageUrl || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600'}
+                                alt={p.name}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.src = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600';
+                                }}
+                              />
                             </div>
                             <div>
                               <p className="font-semibold text-slate-200 text-sm leading-tight">{p.name}</p>

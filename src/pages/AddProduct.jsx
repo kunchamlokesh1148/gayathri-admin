@@ -186,7 +186,7 @@ export default function AddProduct() {
     try {
       setLoading(true);
       
-      const imageUrl = formData.imageUrl.trim() || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600'; // Default placeholder
+      const imageUrl = formData.imageUrl.trim();
       
       setUploadProgress('Saving product records...');
       

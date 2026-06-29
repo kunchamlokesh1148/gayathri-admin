@@ -511,7 +511,14 @@ export default function Dashboard() {
           <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
             {lowStockProducts.map((p) => (
               <div key={p.id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-colors">
-                <img src={p.imageUrl} alt={p.name} className="w-10 h-10 rounded object-cover border border-slate-800 bg-slate-950" />
+                <img 
+                  src={p.imageUrl || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600'} 
+                  alt={p.name} 
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600';
+                  }}
+                  className="w-10 h-10 rounded object-cover border border-slate-800 bg-slate-950" 
+                />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-slate-200 truncate">{p.name}</p>
                   <p className="text-xs text-slate-500">SKU: {p.sku}</p>

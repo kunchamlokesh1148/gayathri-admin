@@ -229,7 +229,7 @@ export default function EditProduct() {
     try {
       setSaving(true);
       
-      const imageUrl = formData.imageUrl.trim() || 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=600';
+      const imageUrl = formData.imageUrl.trim();
       setUploadProgress('Updating product logs...');
 
       const isPackOrBox = formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box';
