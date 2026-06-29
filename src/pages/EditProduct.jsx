@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Upload, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { ArrowLeft, Loader2, AlertCircle, Sparkles } from 'lucide-react';
 import { dbService } from '../services/db';
-import { uploadImageToCloudinary } from '../services/cloudinary';
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -10,10 +9,7 @@ export default function EditProduct() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState('');
-  const [uploadProgress, setUploadProgress] = useState('');
-  const [dragActive, setDragActive] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const [categoriesList, setCategoriesList] = useState([]);
   const [brandsList, setBrandsList] = useState([]);
@@ -83,7 +79,6 @@ export default function EditProduct() {
             imageUrl: data.imageUrl || '',
             status: data.status || 'Active'
           });
-          setImagePreview(data.imageUrl || '');
         } else {
           setError("Product not found in the catalog");
         }
@@ -120,78 +115,20 @@ export default function EditProduct() {
     return Number.isInteger(total) ? total.toFixed(0) : total.toFixed(2);
   };
 
-  const handleDrag = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      await processImageFile(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleImageChange = async (e) => {
-    if (e.target.files && e.target.files[0]) {
-      await processImageFile(e.target.files[0]);
-    }
-  };
-
-  const processImageFile = async (file) => {
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Image size must be smaller than 5MB");
-      return;
-    }
-    const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
-    if (!validTypes.includes(file.type)) {
-      setError("Only JPG, PNG, and WEBP image formats are supported");
-      return;
-    }
-    
-    setError('');
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-
-    setUploadProgress('Uploading image to Cloudinary...');
-    try {
-      const url = await uploadImageToCloudinary(file);
-      setFormData(prev => ({ ...prev, imageUrl: url }));
-      setUploadProgress('Image uploaded successfully!');
-      setTimeout(() => setUploadProgress(''), 3000);
-    } catch (uploadErr) {
-      console.error(uploadErr);
-      setError(uploadErr.message || "Cloudinary upload failed");
-      setUploadProgress('');
-    }
-  };
-
-  const handleRemoveImage = () => {
-    setImageFile(null);
-    setImagePreview('');
-    setFormData(prev => ({ ...prev, imageUrl: '' }));
-    setError('');
-  };
-
   const handleUrlChange = (e) => {
     const url = e.target.value;
     setFormData(prev => ({ ...prev, imageUrl: url }));
+    setImageError(false);
+    
     if (url.trim()) {
-      if (url.startsWith('http://') || url.startsWith('https://')) {
-        setImagePreview(url);
-        setError('');
+      const isValid = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i.test(url.trim());
+      if (!isValid) {
+        setError('Please enter a valid image URL.');
       } else {
-        setError('Please enter a valid image URL starting with http:// or https://');
+        setError('');
       }
     } else {
-      setImagePreview('');
+      setError('');
     }
   };
 
@@ -226,11 +163,17 @@ export default function EditProduct() {
     if (isNaN(stockQtyNum) || stockQtyNum < 0) return setError('Stock Quantity cannot be negative');
     if (isNaN(minStockNum) || minStockNum < 0) return setError('Minimum Stock threshold cannot be negative');
 
+    const imageUrl = formData.imageUrl.trim();
+    if (!imageUrl) {
+      return setError('Please enter a valid image URL.');
+    }
+    const isValidUrl = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i.test(imageUrl);
+    if (!isValidUrl) {
+      return setError('Please enter a valid image URL.');
+    }
+
     try {
       setSaving(true);
-      
-      const imageUrl = formData.imageUrl.trim();
-      setUploadProgress('Updating product logs...');
 
       const isPackOrBox = formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box';
       const purchasePackTotal = purchaseCostNum * (isPackOrBox ? packQuantityNum : 1);
@@ -272,7 +215,6 @@ export default function EditProduct() {
       setError(err.message || 'An error occurred while updating the product');
     } finally {
       setSaving(false);
-      setUploadProgress('');
     }
   };
 
@@ -539,69 +481,34 @@ export default function EditProduct() {
           {/* Description */}
           {/* Product Image Section */}
           <div className="flex flex-col col-span-1 lg:col-span-3 md:col-span-2 gap-1.5 mt-2">
-            <label className="text-sm font-bold text-[#1F2937] mb-1 block">Product Image</label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-              {/* Image Upload Drag & Drop Box */}
-              <div 
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
-                onDrop={handleDrop}
-                className={`relative border-2 border-dashed rounded-2xl flex flex-col items-center justify-center p-6 bg-[#FAF8F5] transition-all
-                  ${dragActive ? 'border-[#C89B3C] bg-[#FFF8E6]' : 'border-[#D6C7A6] hover:border-[#C89B3C]'}
-                `}
-                style={{ minHeight: '200px' }}
-              >
-                {imagePreview ? (
-                  <div className="relative w-full h-full min-h-[160px] rounded-lg overflow-hidden group flex flex-col items-center justify-center">
-                    <img src={imagePreview} alt="Preview" className="max-h-[160px] object-contain rounded-lg shadow-sm" />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                      <label className="cursor-pointer bg-[#C89B3C] hover:bg-[#B8860B] text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all active:scale-98">
-                        Replace Image
-                        <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleImageChange} />
-                      </label>
-                      <button 
-                        type="button"
-                        onClick={handleRemoveImage}
-                        className="bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition-all active:scale-98"
-                      >
-                        Remove Image
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center gap-2 text-center">
-                    <div className="p-3 bg-white border border-[#D6C7A6] rounded-full text-[#B8860B] shadow-sm">
-                      <Upload size={22} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-[#1F2937]">📁 Drag & Drop Image Here</p>
-                      <p className="text-[11px] text-[#B8860B] font-semibold mt-1">OR Click to Choose Image</p>
-                      <p className="text-[10px] text-slate-500 mt-1">Supported: JPG, PNG, WEBP (Max 5MB)</p>
-                    </div>
-                    <input type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handleImageChange} />
-                  </label>
-                )}
-              </div>
-
-              {/* Paste Image URL Column */}
-              <div className="flex flex-col justify-center space-y-4 min-h-[200px] p-6 bg-white border border-[#D6C7A6] rounded-2xl">
-                <div className="text-left">
-                  <h4 className="text-xs font-black uppercase text-[#8A4B00] tracking-wider">OR Paste Image URL</h4>
-                  <p className="text-[11px] text-slate-500 mt-1">If you already have a hosted image link, paste it directly below.</p>
+            <label className="text-sm font-bold text-[#1F2937] mb-1.5 block">Product Image URL *</label>
+            <div className="flex flex-col space-y-3">
+              <input
+                type="text"
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleUrlChange}
+                placeholder="https://example.com/product.jpg"
+                className="premium-input w-full"
+                required
+              />
+              <span className="text-xs text-slate-500">Enter a direct image URL (supported formats: .jpg, .jpeg, .png, .webp, .gif)</span>
+              
+              {/* Image Live Preview */}
+              {formData.imageUrl && formData.imageUrl.trim() && (
+                <div className="mt-3 p-4 bg-[#FAF8F5] border border-[#D6C7A6] rounded-2xl flex flex-col items-center justify-center min-h-[160px]">
+                  {imageError ? (
+                    <span className="text-xs text-red-500 font-bold">Unable to load image from the provided URL.</span>
+                  ) : (
+                    <img 
+                      src={formData.imageUrl} 
+                      alt="Preview" 
+                      onError={() => setImageError(true)} 
+                      className="max-h-[160px] object-contain rounded-lg shadow-sm"
+                    />
+                  )}
                 </div>
-                <div className="flex flex-col">
-                  <label className="text-[11px] font-bold text-[#4B5563] mb-1.5 uppercase">Image Link URL</label>
-                  <input
-                    type="text"
-                    name="imageUrl"
-                    value={formData.imageUrl}
-                    onChange={handleUrlChange}
-                    placeholder="https://example.com/image.jpg"
-                    className="premium-input"
-                  />
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -652,12 +559,6 @@ export default function EditProduct() {
           </div>
         </div>
       </form>
-      
-      {uploadProgress && (
-        <div className="text-center text-xs text-indigo-400 animate-pulse">
-          {uploadProgress}
-        </div>
-      )}
     </div>
   );
 }

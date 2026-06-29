@@ -14,7 +14,6 @@ import {
   ArrowDown, 
   Check, 
   AlertTriangle,
-  Upload,
   Search,
   Lock,
   LogOut,
@@ -25,7 +24,6 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { dbService } from '../services/db';
-import { uploadImageToCloudinary } from '../services/cloudinary';
 import { useAuth } from '../context/AuthContext';
 import { auth, firebaseConfig } from '../firebase/config';
 import { initializeApp, deleteApp } from 'firebase/app';
@@ -76,7 +74,6 @@ export default function Settings() {
     imageUrl: '',
     badge: 'Bulk Pricing'
   });
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [previewingBanner, setPreviewingBanner] = useState(null);
 
   // Festival Banner State
@@ -87,7 +84,7 @@ export default function Settings() {
     link: '',
     active: false
   });
-  const [uploadingFestivalImage, setUploadingFestivalImage] = useState(false);
+
 
   // Featured Products State
   const [products, setProducts] = useState([]);
@@ -286,21 +283,7 @@ export default function Settings() {
     setShowBannerModal(true);
   };
 
-  const handleBannerImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploadingImage(true);
-    try {
-      const url = await uploadImageToCloudinary(file);
-      setBannerForm(prev => ({ ...prev, imageUrl: url }));
-      showToast("Banner image uploaded successfully!");
-    } catch (err) {
-      console.error(err);
-      showToast("Failed to upload image. Please try again.", "error");
-    } finally {
-      setUploadingImage(false);
-    }
-  };
+
 
   const handleSaveBanner = async (e) => {
     e.preventDefault();
@@ -373,22 +356,7 @@ export default function Settings() {
     }
   };
 
-  // Save Festival Banner Handler
-  const handleFestivalImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setUploadingFestivalImage(true);
-    try {
-      const url = await uploadImageToCloudinary(file);
-      setFestivalBanner(prev => ({ ...prev, imageUrl: url }));
-      showToast("Festival banner image uploaded successfully!");
-    } catch (err) {
-      console.error(err);
-      showToast("Failed to upload image.", "error");
-    } finally {
-      setUploadingFestivalImage(false);
-    }
-  };
+
 
   const handleSaveFestivalBanner = async (e) => {
     e.preventDefault();
@@ -1062,22 +1030,10 @@ export default function Settings() {
                           </div>
 
                           <div className="w-full sm:w-1/2 flex flex-col gap-2">
-                            <label className="flex items-center justify-center gap-2 p-3 rounded-lg border border-indigo-500/20 bg-indigo-500/5 hover:bg-indigo-500/10 text-indigo-400 font-semibold text-xs cursor-pointer transition-colors duration-200">
-                              <Upload size={14} />
-                              {uploadingFestivalImage ? 'Uploading Image...' : 'Choose Image File'}
-                              <input 
-                                type="file" 
-                                className="hidden" 
-                                accept="image/*" 
-                                onChange={handleFestivalImageUpload}
-                                disabled={uploadingFestivalImage}
-                              />
-                            </label>
-                            
                             <input
                               type="text"
                               className="glass-input text-xs"
-                              placeholder="Or paste direct image URL here..."
+                              placeholder="Paste direct image URL here..."
                               value={festivalBanner.imageUrl}
                               onChange={e => setFestivalBanner({ ...festivalBanner, imageUrl: e.target.value })}
                             />
@@ -1570,21 +1526,10 @@ export default function Settings() {
                   </div>
                   
                   <div className="flex-1 flex flex-col gap-1">
-                    <label className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded border border-indigo-500/20 bg-indigo-500/5 hover:bg-indigo-500/10 text-indigo-400 font-bold text-xs cursor-pointer transition-colors duration-200">
-                      <Upload size={12} />
-                      {uploadingImage ? 'Uploading Image...' : 'Upload Image File'}
-                      <input 
-                        type="file" 
-                        className="hidden" 
-                        accept="image/*" 
-                        onChange={handleBannerImageUpload}
-                        disabled={uploadingImage}
-                      />
-                    </label>
                     <input
                       type="text"
                       className="glass-input text-[10px] py-1"
-                      placeholder="Or paste direct image URL here..."
+                      placeholder="Paste direct image URL here..."
                       value={bannerForm.imageUrl}
                       onChange={e => setBannerForm({ ...bannerForm, imageUrl: e.target.value })}
                     />
