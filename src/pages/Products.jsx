@@ -52,7 +52,7 @@ export default function Products() {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
-  const [imageError, setImageError] = useState(false);
+  const [imageValid, setImageValid] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -145,18 +145,32 @@ export default function Products() {
   const handleUrlChange = (e) => {
     const url = e.target.value;
     setFormData(prev => ({ ...prev, imageUrl: url }));
-    setImageError(false);
+    setImageValid(false);
+    setFormError('');
     
-    if (url.trim()) {
-      const isValid = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i.test(url.trim());
-      if (!isValid) {
-        setFormError('Please enter a valid image URL.');
-      } else {
+    if (!url.trim()) {
+      return;
+    }
+    
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      setFormError('Please enter a valid image URL.');
+      return;
+    }
+    
+    const img = new Image();
+    img.onload = () => {
+      if (e.target.value === url) {
+        setImageValid(true);
         setFormError('');
       }
-    } else {
-      setFormError('');
-    }
+    };
+    img.onerror = () => {
+      if (e.target.value === url) {
+        setImageValid(false);
+        setFormError('Unable to load image.');
+      }
+    };
+    img.src = url;
   };
 
   const handleCreateProduct = async (e) => {
@@ -192,9 +206,11 @@ export default function Products() {
     if (!finalImageUrl) {
       return setFormError('Please enter a valid image URL.');
     }
-    const isValidUrl = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i.test(finalImageUrl);
-    if (!isValidUrl) {
+    if (!finalImageUrl.startsWith('http://') && !finalImageUrl.startsWith('https://')) {
       return setFormError('Please enter a valid image URL.');
+    }
+    if (!imageValid) {
+      return setFormError('Unable to load image.');
     }
 
     try {
@@ -969,18 +985,17 @@ export default function Products() {
                   className="w-full pl-3 pr-3 py-2.5 glass-input text-sm text-slate-100 placeholder-slate-500"
                   required
                 />
-                <span className="text-[10px] text-slate-500">Enter a direct image URL (supported formats: .jpg, .jpeg, .png, .webp, .gif)</span>
+                <span className="text-[10px] text-slate-500">Enter a direct image URL</span>
                 
                 {/* Image Live Preview */}
                 {formData.imageUrl && formData.imageUrl.trim() && (
                   <div className="mt-2 p-3 bg-slate-900/40 border border-slate-850 rounded-xl flex flex-col items-center justify-center min-h-[140px]">
-                    {imageError ? (
-                      <span className="text-xs text-red-500 font-bold">Unable to load image from the provided URL.</span>
+                    {!imageValid ? (
+                      <span className="text-xs text-red-500 font-bold">Unable to load image.</span>
                     ) : (
                       <img 
                         src={formData.imageUrl} 
                         alt="Preview" 
-                        onError={() => setImageError(true)} 
                         className="max-h-[140px] object-contain rounded-lg shadow-sm"
                       />
                     )}

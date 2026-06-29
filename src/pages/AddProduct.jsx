@@ -7,7 +7,7 @@ export default function AddProduct() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [imageError, setImageError] = useState(false);
+  const [imageValid, setImageValid] = useState(false);
 
   const [categoriesList, setCategoriesList] = useState([]);
   const [brandsList, setBrandsList] = useState([]);
@@ -53,18 +53,32 @@ export default function AddProduct() {
   const handleUrlChange = (e) => {
     const url = e.target.value;
     setFormData(prev => ({ ...prev, imageUrl: url }));
-    setImageError(false);
+    setImageValid(false);
+    setError('');
     
-    if (url.trim()) {
-      const isValid = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i.test(url.trim());
-      if (!isValid) {
-        setError('Please enter a valid image URL.');
-      } else {
+    if (!url.trim()) {
+      return;
+    }
+    
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      setError('Please enter a valid image URL.');
+      return;
+    }
+    
+    const img = new Image();
+    img.onload = () => {
+      if (e.target.value === url) {
+        setImageValid(true);
         setError('');
       }
-    } else {
-      setError('');
-    }
+    };
+    img.onerror = () => {
+      if (e.target.value === url) {
+        setImageValid(false);
+        setError('Unable to load image.');
+      }
+    };
+    img.src = url;
   };
 
   const handleInputChange = (e) => {
@@ -125,9 +139,11 @@ export default function AddProduct() {
     if (!imageUrl) {
       return setError('Please enter a valid image URL.');
     }
-    const isValidUrl = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/i.test(imageUrl);
-    if (!isValidUrl) {
+    if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
       return setError('Please enter a valid image URL.');
+    }
+    if (!imageValid) {
+      return setError('Unable to load image.');
     }
 
     try {
@@ -426,18 +442,17 @@ export default function AddProduct() {
                 className="premium-input w-full"
                 required
               />
-              <span className="text-xs text-slate-500">Enter a direct image URL (supported formats: .jpg, .jpeg, .png, .webp, .gif)</span>
+              <span className="text-xs text-slate-500">Enter a direct image URL</span>
               
               {/* Image Live Preview */}
               {formData.imageUrl && formData.imageUrl.trim() && (
                 <div className="mt-3 p-4 bg-[#FAF8F5] border border-[#D6C7A6] rounded-2xl flex flex-col items-center justify-center min-h-[160px]">
-                  {imageError ? (
-                    <span className="text-xs text-red-500 font-bold">Unable to load image from the provided URL.</span>
+                  {!imageValid ? (
+                    <span className="text-xs text-red-500 font-bold">Unable to load image.</span>
                   ) : (
                     <img 
                       src={formData.imageUrl} 
                       alt="Preview" 
-                      onError={() => setImageError(true)} 
                       className="max-h-[160px] object-contain rounded-lg shadow-sm"
                     />
                   )}
