@@ -12,16 +12,17 @@ export const uploadImageToCloudinary = async (file, cloudName, uploadPreset) => 
   const url = `https://api.cloudinary.com/v1_1/${cName || 'undefined'}/image/upload`;
 
   if (!cName || !cPreset || cName === 'YOUR_CLOUD_NAME' || cPreset === 'YOUR_UPLOAD_PRESET' || cName.trim() === '') {
-    const errorMsg = "Cloudinary configuration missing. Please verify VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in your environment variables.";
-    console.error("Cloudinary Debug Info:", {
-      "Cloudinary URL": url,
-      "Upload Preset": cPreset || 'undefined',
-      "Cloud Name": cName || 'undefined',
-      "HTTP Status": "N/A",
-      "Response JSON": "N/A",
-      "Error Message": errorMsg
+    console.warn("Cloudinary configuration missing. Falling back to local data URL for rendering.");
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = () => {
+        reject(new Error("Failed to read local file"));
+      };
+      reader.readAsDataURL(file);
     });
-    throw new Error(errorMsg);
   }
 
   try {
