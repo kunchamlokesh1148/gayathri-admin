@@ -210,6 +210,10 @@ export default function Settings() {
   // Save Store Information Handler
   const handleSaveStoreInfo = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     setLoading(true);
     try {
       await dbService.saveSettings('storeInfo', storeInfo);
@@ -225,6 +229,10 @@ export default function Settings() {
   // Save Business Settings Handler
   const handleSaveBusinessSettings = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     setLoading(true);
     try {
       await dbService.saveSettings('business', businessSettings);
@@ -240,6 +248,10 @@ export default function Settings() {
   // Save Notification settings
   const handleSaveNotifications = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     setLoading(true);
     try {
       await dbService.saveSettings('notifications', notifications);
@@ -287,6 +299,10 @@ export default function Settings() {
 
   const handleSaveBanner = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     if (!bannerForm.imageUrl) {
       showToast("Please upload or provide a banner image.", "error");
       return;
@@ -313,6 +329,10 @@ export default function Settings() {
   };
 
   const handleDeleteBanner = async (id) => {
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     if (!window.confirm("Are you sure you want to delete this banner?")) return;
     setLoading(true);
     try {
@@ -329,6 +349,10 @@ export default function Settings() {
   };
 
   const handleMoveBannerOrder = async (banner, direction) => {
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     const currentIndex = banners.findIndex(b => b.id === banner.id);
     if (direction === 'up' && currentIndex === 0) return;
     if (direction === 'down' && currentIndex === banners.length - 1) return;
@@ -360,6 +384,10 @@ export default function Settings() {
 
   const handleSaveFestivalBanner = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin' && adminProfile?.role !== 'Manager') {
+      showToast("Access Denied: You do not have permission to modify settings.", "error");
+      return;
+    }
     setLoading(true);
     try {
       await dbService.saveSettings('festivalBanner', festivalBanner);
@@ -467,6 +495,10 @@ export default function Settings() {
 
   const handleSaveAdmin = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin') {
+      showToast("Access Denied: Only Super Admins can manage admin credentials.", "error");
+      return;
+    }
     if (!adminForm.email || !adminForm.name) {
       showToast("Please fill in Name and Email.", "error");
       return;
@@ -551,6 +583,10 @@ export default function Settings() {
   };
 
   const handleDeleteAdmin = async (id) => {
+    if (adminProfile?.role !== 'Super Admin') {
+      showToast("Access Denied: Only Super Admins can manage admin credentials.", "error");
+      return;
+    }
     const adminToDelete = adminCredentials.find(a => a.id === id);
     if (adminToDelete && adminToDelete.email === 'admin@srigayathri.com') {
       showToast("Permanent Super Admin cannot be deleted.", "error");

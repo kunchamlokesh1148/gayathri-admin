@@ -4,6 +4,7 @@ import { dbService } from '../services/db';
 import { firebaseConfig } from '../firebase/config';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, deleteUser } from 'firebase/auth';
 import { initializeApp, deleteApp } from 'firebase/app';
+import { useAuth } from '../context/AuthContext';
 
 const mapAuthError = (error) => {
   console.error("Original Firebase Auth Error:", error);
@@ -36,6 +37,7 @@ const mapAuthError = (error) => {
 };
 
 export default function DeliveryStaff() {
+  const { adminProfile } = useAuth();
   const [loading, setLoading] = useState(true);
   const [staff, setStaff] = useState([]);
   const [saving, setSaving] = useState(false);
@@ -76,6 +78,10 @@ export default function DeliveryStaff() {
 
   const handleCreateStaff = async (e) => {
     e.preventDefault();
+    if (adminProfile?.role !== 'Super Admin') {
+      setError("Access Denied: Only Super Admins can manage delivery staff.");
+      return;
+    }
     setError('');
     setSuccess('');
 
@@ -154,6 +160,10 @@ export default function DeliveryStaff() {
   };
 
   const handleToggleStatus = async (driver) => {
+    if (adminProfile?.role !== 'Super Admin') {
+      alert("Access Denied: Only Super Admins can manage delivery staff.");
+      return;
+    }
     try {
       const newStatus = driver.status === 'active' ? 'inactive' : 'active';
       await dbService.updateDeliveryStaff(driver.id, { status: newStatus });
@@ -165,6 +175,10 @@ export default function DeliveryStaff() {
   };
 
   const handleDeleteStaff = async (driver) => {
+    if (adminProfile?.role !== 'Super Admin') {
+      alert("Access Denied: Only Super Admins can manage delivery staff.");
+      return;
+    }
     if (!confirm(`Are you sure you want to remove ${driver.name}? They will be removed from the shipping dispatch roster.`)) return;
     
     try {

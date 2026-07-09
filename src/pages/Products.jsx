@@ -175,6 +175,10 @@ export default function Products() {
 
   const handleCreateProduct = async (e) => {
     e.preventDefault();
+    if (isStaff) {
+      setFormError("Access Denied: Staff members cannot create products.");
+      return;
+    }
     setFormError('');
     setFormSuccess('');
 
@@ -338,8 +342,11 @@ export default function Products() {
     }
   };
 
-  // Delete Handler
   const handleDeleteProduct = async () => {
+    if (isStaff) {
+      alert("Access Denied: Staff members cannot delete products.");
+      return;
+    }
     if (!deleteProductObj) return;
     try {
       setDeleting(true);
@@ -357,6 +364,10 @@ export default function Products() {
   // Categories & Brands Handlers
   const handleAddCategory = async (e) => {
     e.preventDefault();
+    if (isStaff) {
+      setManageError("Access Denied: Staff members cannot add categories.");
+      return;
+    }
     if (!newCatName.trim()) return;
     setManageError('');
     try {
@@ -370,6 +381,10 @@ export default function Products() {
   };
 
   const handleUpdateCategory = async (id) => {
+    if (isStaff) {
+      setManageError("Access Denied: Staff members cannot update categories.");
+      return;
+    }
     if (!editingName.trim()) return;
     setManageError('');
     try {
@@ -385,6 +400,10 @@ export default function Products() {
   };
 
   const handleDeleteCategory = async (id) => {
+    if (isStaff) {
+      setManageError("Access Denied: Staff members cannot delete categories.");
+      return;
+    }
     if (!confirm("Are you sure you want to delete this category? Products in this category will remain, but the category option will be removed.")) return;
     setManageError('');
     try {
@@ -398,6 +417,10 @@ export default function Products() {
 
   const handleAddBrand = async (e) => {
     e.preventDefault();
+    if (isStaff) {
+      setManageError("Access Denied: Staff members cannot add brands.");
+      return;
+    }
     if (!newBrandName.trim()) return;
     setManageError('');
     try {
@@ -411,6 +434,10 @@ export default function Products() {
   };
 
   const handleUpdateBrand = async (id) => {
+    if (isStaff) {
+      setManageError("Access Denied: Staff members cannot update brands.");
+      return;
+    }
     if (!editingName.trim()) return;
     setManageError('');
     try {
@@ -426,6 +453,10 @@ export default function Products() {
   };
 
   const handleDeleteBrand = async (id) => {
+    if (isStaff) {
+      setManageError("Access Denied: Staff members cannot delete brands.");
+      return;
+    }
     if (!confirm("Are you sure you want to delete this brand? Products associated with this brand will remain, but the brand option will be removed.")) return;
     setManageError('');
     try {
