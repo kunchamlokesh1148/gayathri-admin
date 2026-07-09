@@ -17,6 +17,8 @@ import Login from './pages/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import { dbService } from './services/db';
 
+console.log("dbService keys on App load:", Object.keys(dbService));
+
 function App() {
   return (
     <Router>
@@ -39,7 +41,7 @@ function App() {
                   <Route path="delivery-staff" element={<ProtectedRoute allowedRoles={['Super Admin']}><DeliveryStaff /></ProtectedRoute>} />
                   <Route path="customer-issues" element={<CustomerIssues />} />
                   <Route path="reports" element={<ProtectedRoute allowedRoles={['Super Admin']}><Reports /></ProtectedRoute>} />
-                  <Route path="settings" element={<ProtectedRoute allowedRoles={['Super Admin', 'Manager']}><Settings /></ProtectedRoute>} />
+                  <Route path="settings" element={<Settings />} />
                 </Routes>
               </Layout>
             </ProtectedRoute>

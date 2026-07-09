@@ -58,6 +58,8 @@ export default function Orders() {
         dbService.getCustomers()
       ]);
       const docs = staffData;
+      console.log("Loading delivery staff...");
+      console.log("Firestore docs:", docs);
       setOrders(ordersData);
       setDeliveryStaffList(staffData);
       setCustomersList(customersData);
@@ -82,10 +84,6 @@ export default function Orders() {
 
   // Order Lifecycle Transitions
   const handleAccept = async (orderId) => {
-    if (isStaff) {
-      alert("Access Denied: Staff members cannot perform this action.");
-      return;
-    }
     try {
       setUpdatingId(orderId);
       await dbService.acceptOrder(orderId);
@@ -99,10 +97,6 @@ export default function Orders() {
   };
 
   const handlePack = async (orderId) => {
-    if (isStaff) {
-      alert("Access Denied: Staff members cannot perform this action.");
-      return;
-    }
     try {
       setUpdatingId(orderId);
       await dbService.updateOrder(orderId, { status: 'Packed' });
@@ -115,10 +109,6 @@ export default function Orders() {
   };
 
   const handleAssignStaff = async (orderId) => {
-    if (isStaff) {
-      alert("Access Denied: Staff members cannot perform this action.");
-      return;
-    }
     const order = orders.find(o => o.id === orderId);
     const staffId = tempStaffMap[orderId] || order?.deliveryStaffId || '';
     if (!staffId) {
@@ -157,10 +147,6 @@ export default function Orders() {
   };
 
   const handleShip = async (orderId) => {
-    if (isStaff) {
-      alert("Access Denied: Staff members cannot perform this action.");
-      return;
-    }
     const order = orders.find(o => o.id === orderId);
     const driverId = order?.deliveryStaffId;
     if (!driverId) {
@@ -198,10 +184,6 @@ export default function Orders() {
   };
 
   const handleDeliver = async (orderId, driverId) => {
-    if (isStaff) {
-      alert("Access Denied: Staff members cannot perform this action.");
-      return;
-    }
     try {
       setUpdatingId(orderId);
 
@@ -223,10 +205,6 @@ export default function Orders() {
   };
 
   const handleVerifyAndDeliver = async (order) => {
-    if (isStaff) {
-      alert("Access Denied: Staff members cannot perform this action.");
-      return;
-    }
     const entered = (otpInputs[order.id] || '').trim();
     const correct = (order.deliveryCode || '').trim();
     if (correct && entered === correct) {
@@ -294,6 +272,8 @@ export default function Orders() {
       </div>
     );
   }
+
+  console.log(deliveryStaffList);
 
   return (
     <div className="space-y-6 animate-fade-in">
