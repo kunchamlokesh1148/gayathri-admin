@@ -28,7 +28,7 @@ service cloud.firestore {
     
     // 1. adminCredentials rules
     match /adminCredentials/{uid} {
-      allow read: if isAdmin();
+      allow read: if isAuthenticated() && (request.auth.uid == uid || isAdmin());
       allow write: if isAuthenticated() && isSuperAdmin();
     }
     
@@ -52,7 +52,7 @@ service cloud.firestore {
     // 4. orders rules
     match /orders/{orderId} {
       allow read: if isAdmin() || (isAuthenticated() && resource.data.customerId == request.auth.uid);
-      allow create: if true; // Anyone can place an order (or check authentication if customer portal requires login)
+      allow create: if true; // Anyone can place an order
       allow update, delete: if isAdmin() && getAdminData().role != 'Staff'; // Staff is read-only
     }
     
