@@ -35,7 +35,6 @@ export default function CustomerIssues() {
 
   // Sync / Fetch support issues in real-time
   useEffect(() => {
-    setLoading(true);
     const unsubscribe = onSnapshot(
       collection(db, 'issues'),
       (snap) => {

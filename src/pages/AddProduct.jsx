@@ -508,12 +508,6 @@ export default function AddProduct() {
           </div>
         </div>
       </form>
-      
-      {uploadProgress && (
-        <div className="text-center text-xs text-indigo-400 animate-pulse">
-          {uploadProgress}
-        </div>
-      )}
     </div>
   );
 }

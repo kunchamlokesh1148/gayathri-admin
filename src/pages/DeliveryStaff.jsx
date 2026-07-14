@@ -109,7 +109,7 @@ export default function DeliveryStaff() {
         const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email.trim(), password);
         uid = userCredential.user.uid;
       } catch (authErr) {
-        throw new Error(mapAuthError(authErr));
+        throw new Error(mapAuthError(authErr), { cause: authErr });
       } finally {
         if (secondaryApp) {
           await deleteApp(secondaryApp);

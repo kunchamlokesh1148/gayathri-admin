@@ -13,7 +13,6 @@ import {
    X, 
    ChevronLeft, 
    ChevronRight,
-   Globe,
    MessageSquare,
    LogOut
 } from 'lucide-react';

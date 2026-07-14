@@ -408,7 +408,7 @@ export default function Settings() {
         await reauthenticateWithCredential(currentUser, credential);
       } catch (reauthErr) {
         console.error("Reauthentication failed:", reauthErr);
-        throw new Error("Invalid current password. Please check your credentials.");
+        throw new Error("Invalid current password. Please check your credentials.", { cause: reauthErr });
       }
       
       try {
@@ -416,9 +416,9 @@ export default function Settings() {
       } catch (pwdErr) {
         console.error("Password update failed:", pwdErr);
         if (pwdErr.code === 'auth/weak-password') {
-          throw new Error("Password must be at least 6 characters long.");
+          throw new Error("Password must be at least 6 characters long.", { cause: pwdErr });
         }
-        throw new Error("Something went wrong. Please try again.");
+        throw new Error("Something went wrong. Please try again.", { cause: pwdErr });
       }
       showToast("Admin password changed successfully!");
       setSecurityForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
