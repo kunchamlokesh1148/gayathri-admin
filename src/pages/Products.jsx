@@ -8,10 +8,12 @@ import {
   Trash2, 
   AlertTriangle,
   Layers,
-  CheckCircle2
+  CheckCircle2,
+  UploadCloud
 } from 'lucide-react';
 import { dbService } from '../services/db';
 import { useAuth } from '../context/AuthContext';
+import { storage } from '../firebase/config';
 
 const getProductPacks = (p) => {
   const wholesaleUnit = String(p?.wholesaleUnit || p?.unit || 'Piece').toLowerCase();
@@ -53,6 +55,8 @@ export default function Products() {
   const [formError, setFormError] = useState('');
   const [formSuccess, setFormSuccess] = useState('');
   const [imageValid, setImageValid] = useState(false);
+  const [imageSource, setImageSource] = useState('upload'); // 'upload' or 'url'
+  const [imageFile, setImageFile] = useState(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -173,6 +177,66 @@ export default function Products() {
     img.src = url;
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setFormError('Image file is too large. Max size is 5MB.');
+        return;
+      }
+      setImageFile(file);
+      setImageValid(true);
+      setFormError('');
+      const objectUrl = URL.createObjectURL(file);
+      setFormData(prev => ({ ...prev, imageUrl: objectUrl }));
+    }
+  };
+
+  const handleSourceChange = (src) => {
+    setImageSource(src);
+    setImageFile(null);
+    setImageValid(false);
+    setFormData(prev => ({ ...prev, imageUrl: '' }));
+  };
+
+  const compressImageToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 600;
+          const MAX_HEIGHT = 600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+          resolve(dataUrl);
+        };
+        img.onerror = () => reject(new Error('Failed to load image for compression'));
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+    });
+  };
+
   const handleCreateProduct = async (e) => {
     e.preventDefault();
     setFormError('');
@@ -202,20 +266,40 @@ export default function Products() {
     if (isNaN(stockQtyNum) || stockQtyNum < 0) return setFormError('Stock Quantity cannot be negative');
     if (isNaN(minStockNum) || minStockNum < 0) return setFormError('Minimum Stock threshold cannot be negative');
 
-    const finalImageUrl = formData.imageUrl.trim();
-    if (!finalImageUrl) {
-      return setFormError('Please enter a valid image URL.');
-    }
-    if (!finalImageUrl.startsWith('http://') && !finalImageUrl.startsWith('https://')) {
-      return setFormError('Please enter a valid image URL.');
-    }
-    if (!imageValid) {
-      return setFormError('Unable to load image.');
+    let finalImageUrl = formData.imageUrl;
+
+    if (imageSource === 'url') {
+      const urlStr = formData.imageUrl.trim();
+      if (!urlStr) {
+        return setFormError('Please enter a valid image URL.');
+      }
+      if (!urlStr.startsWith('http://') && !urlStr.startsWith('https://')) {
+        return setFormError('Please enter a valid image URL.');
+      }
+      if (!imageValid) {
+        return setFormError('Unable to load image.');
+      }
+    } else {
+      if (!imageFile) {
+        return setFormError('Please select an image file to upload.');
+      }
     }
 
     try {
       setFormLoading(true);
-      
+
+      if (imageSource === 'upload' && imageFile) {
+        try {
+          const { ref, uploadBytes, getDownloadURL } = await import('firebase/storage');
+          const storageRef = ref(storage, `products/${Date.now()}_${imageFile.name}`);
+          const uploadResult = await uploadBytes(storageRef, imageFile);
+          finalImageUrl = await getDownloadURL(uploadResult.ref);
+        } catch (storageErr) {
+          console.warn("Storage upload failed, fallback to base64 compression:", storageErr.message);
+          finalImageUrl = await compressImageToBase64(imageFile);
+        }
+      }
+
       const generatedSku = 'SKU-' + Math.floor(100000 + Math.random() * 900000);
 
       const isPackOrBox = formData.wholesaleUnit === 'Pack' || formData.wholesaleUnit === 'Box';
@@ -974,24 +1058,68 @@ export default function Products() {
 
             {/* Product Image Section */}
             <div className="flex flex-col gap-1.5 mt-2">
-              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Product Image URL *</label>
-              <div className="flex flex-col space-y-2">
-                <input
-                  type="text"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleUrlChange}
-                  placeholder="https://example.com/product.jpg"
-                  className="w-full pl-3 pr-3 py-2.5 glass-input text-sm text-slate-100 placeholder-slate-500"
-                  required
-                />
-                <span className="text-[10px] text-slate-500">Enter a direct image URL</span>
+              <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Product Image *</label>
+              <div className="flex flex-col space-y-3">
+                {/* Selector Tabs */}
+                <div className="flex space-x-4 border-b border-slate-800 pb-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleSourceChange('upload')}
+                    className={`pb-1 text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
+                      imageSource === 'upload' ? 'text-amber-500 border-b border-amber-500 font-extrabold' : 'text-slate-500 hover:text-slate-400'
+                    }`}
+                  >
+                    Upload File
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSourceChange('url')}
+                    className={`pb-1 text-[10px] font-bold uppercase tracking-wider transition cursor-pointer ${
+                      imageSource === 'url' ? 'text-amber-500 border-b border-amber-500 font-extrabold' : 'text-slate-500 hover:text-slate-400'
+                    }`}
+                  >
+                    Image URL
+                  </button>
+                </div>
+
+                {imageSource === 'url' ? (
+                  <div className="flex flex-col space-y-1.5">
+                    <input
+                      type="text"
+                      name="imageUrl"
+                      value={formData.imageUrl}
+                      onChange={handleUrlChange}
+                      placeholder="https://example.com/product.jpg"
+                      className="w-full pl-3 pr-3 py-2.5 glass-input text-sm text-slate-100 placeholder-slate-500"
+                      required={imageSource === 'url'}
+                    />
+                    <span className="text-[10px] text-slate-500">Enter a direct image URL</span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col space-y-1.5">
+                    <div className="flex items-center justify-center w-full">
+                      <label className="flex flex-col items-center justify-center w-full h-28 border border-dashed border-slate-700 rounded-xl cursor-pointer bg-slate-900/30 hover:bg-slate-900/50 transition">
+                        <div className="flex flex-col items-center justify-center pt-4 pb-4">
+                          <UploadCloud className="h-6 w-6 text-amber-500 mb-1" />
+                          <p className="text-[11px] font-bold text-slate-300">{imageFile ? imageFile.name : 'Click to select image file'}</p>
+                          <p className="text-[9px] text-slate-500 mt-0.5">PNG, JPG or JPEG (Max 5MB)</p>
+                        </div>
+                        <input 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={handleFileChange} 
+                        />
+                      </label>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Image Live Preview */}
                 {formData.imageUrl && formData.imageUrl.trim() && (
                   <div className="mt-2 p-3 bg-slate-900/40 border border-slate-850 rounded-xl flex flex-col items-center justify-center min-h-[140px]">
                     {!imageValid ? (
-                      <span className="text-xs text-red-500 font-bold">Unable to load image.</span>
+                      <span className="text-xs text-red-500 font-bold">Unable to load image preview.</span>
                     ) : (
                       <img 
                         src={formData.imageUrl} 
